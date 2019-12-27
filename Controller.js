@@ -58,6 +58,10 @@ class Controller
 			}
 		}
 	}
+	clearSorts()
+	{
+		this.sorters = [];
+	}
 	refresh()
 	{
 		this.doSorts();
@@ -70,7 +74,7 @@ class Controller
 	}
 	setImage(src)
 	{
-		this.sorters = [];
+		this.clearSorts();
 		this.source.setImage(src);
 	}
 	
