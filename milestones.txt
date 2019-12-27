@@ -1,0 +1,8 @@
+1. Basic functionality - done
+2. configuration/input
+3. touch support
+4. image saving
+5. custom image loading
+6. refactor
+7. aesthetics
+8. (STRETCH) zoom in/out, pan
