@@ -6,17 +6,9 @@ const WIDTH_PADDING = 50;
 //This class contains the actual image and ways for the user to interact with it.
 class Source
 {
-	createPixelArray()
+	createPixelmap()
 	{
-		this.pixels = new Array(this.image.width);
-		for(var columnIndex = 0; columnIndex < this.pixels.length; columnIndex++)
-		{
-			this.pixels[columnIndex] = new Array(this.image.height);
-			for(var rowIndex = 0; rowIndex < this.pixels[columnIndex].length; rowIndex++ )
-			{
-				this.pixels[columnIndex][rowIndex] = new FastPixel(this.imageData, columnIndex, rowIndex);
-			}
-		}
+		this.pixelmap = new PixelMap(this.context);
 	}
 	setImage(src)
 	{
@@ -34,8 +26,7 @@ class Source
 			canvas.width = image.width;
 			canvas.height = image.height;
 			context.drawImage(image, 0, 0);
-			selfReference.imageData = context.getImageData(0, 0, canvas.width, canvas.height);
-			selfReference.createPixelArray();
+			selfReference.createPixelmap();
 		}
 	}
 	constructor(src)
@@ -43,24 +34,12 @@ class Source
 		this.setImage(src);
 		this.canvas = document.createElement("canvas");
 		this.context = this.canvas.getContext("2d");
-		//At first, just create a temporary 1x1 image data array.
-		//It will be redefined when the image is loaded.
-		this.imageData = this.context.createImageData(1,1);
+		//Create a blank pixelmap at first.
+		this.createPixelmap();
 	}
 	draw()
 	{
-		this.context.putImageData(this.imageData, 0,0);
-	}
-	//GetPixel takes an x,y coordinate pair, and returns an object,
-	//with properties red, green, blue, and alpha.
-	getPixel(x, y)
-	{
-		return this.pixels[x][y];
-	}
-	//Swaps two pixels of given coordinates in the imageData.
-	swapPixels(x1, y1, x2, y2)
-	{
-		this.pixels[x1][y1].swapWith(this.pixels[x2][y2]);
+		this.context.putImageData(this.pixelmap.imagedata, 0,0);
 	}
 }
 

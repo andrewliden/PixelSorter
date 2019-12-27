@@ -30,9 +30,9 @@ class Sorter
 				this.coordinatesList.push(currentCoordinate);		
 		}
 	}
-	constructor(source, x, y, theta, tmax)
+	constructor(pixelmap, x, y, theta, tmax)
 	{
-		this.source = source;
+		this.pixelmap = pixelmap;
 		this.x = x;
 		this.y = y;
 		this.theta = theta;
@@ -42,13 +42,13 @@ class Sorter
 	//Compares two pixel objects.
 	pixelCompare(pixel1, pixel2)
 	{
-		return pixel1.getLuma() > pixel2.getLuma();
+		return this.pixelmap.getLuma(pixel1) > this.pixelmap.getLuma(pixel2);
 	}
 	//Compares two pixels at given coordinate pairs.
 	comparePixelAt(coord1, coord2)
 	{
-		var pixel1 = this.source.getPixel(coord1.x, coord1.y);
-		var pixel2 = this.source.getPixel(coord2.x, coord2.y);
+		var pixel1 = this.pixelmap.getPixel(coord1.x, coord1.y);
+		var pixel2 = this.pixelmap.getPixel(coord2.x, coord2.y);
 		return this.pixelCompare(pixel1, pixel2);
 	}
 	doSort()
@@ -60,7 +60,7 @@ class Sorter
 			var prev = this.coordinatesList[t - 1];
 			if(this.comparePixelAt(current, prev))
 			{
-				this.source.swapPixels(current.x,current.y, prev.x, prev.y);
+				this.pixelmap.swapAt(current.x,current.y, prev.x, prev.y);
 				swapPerformed = true;
 			}
 		}
@@ -112,7 +112,7 @@ class SorterCreator
 		var tmax = this.collisionCheck(startX, startY, theta, maxPixels);
 		if(tmax > 0)
 		{
-			var newSorter = new this.sorterType(this.controller.source, startX, startY, theta, tmax);
+			var newSorter = new this.sorterType(this.controller.source.pixelmap, startX, startY, theta, tmax);
 			this.controller.sorters.push(newSorter);
 		}
 	}

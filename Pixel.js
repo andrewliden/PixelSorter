@@ -4,12 +4,13 @@ class PixelMap
 {
 	updateImageData()
 	{
-		this.imagedata = this.context.getImageData(0, 0, canvas.width, canvas.height);
+		this.imagedata = this.context.getImageData(0, 0, this.context.canvas.width, this.context.canvas.height);
 		this.data = this.imagedata.data;
 	}
 	constructor(context)
 	{
 		this.context = context;
+		this.updateImageData();
 	}
 	//getPixel returns the index of the red pixel at the given x,y pair.
 	getPixel(x, y)
@@ -37,17 +38,17 @@ class PixelMap
 	{
 		return (1/3) * (this.data[redIndex] + this.data[redIndex + 1] + this.data[redIndex + 2]);
 	}
-	getValue()
+	getValue(redIndex)
 	{
 		return Math.max(this.data[redIndex], this.data[redIndex + 1], this.data[redIndex + 2]);
 	}
-	getLightness()
+	getLightness(redIndex)
 	{
 		var max = Math.max(this.data[redIndex], this.data[redIndex + 1], this.data[redIndex + 2]);
-		var min = Math.min(this.data[redIndex], this.data[redIndex + 1], this..data[redIndex + 2]);
+		var min = Math.min(this.data[redIndex], this.data[redIndex + 1], this.data[redIndex + 2]);
 		return 0.5 * (max + min);
 	}
-	getLuma()
+	getLuma(redIndex)
 	{
 		return 0.2126 * this.data[redIndex] + 0.7152 * this.data[redIndex + 1] + 0.0722 * this.data[redIndex + 2];
 	}
@@ -57,14 +58,20 @@ class PixelMap
 		var tempGreen = this.data[redIndex + 1];
 		var tempBlue = this.data[redIndex + 2];
 		var tempAlpha = this.data[redIndex + 3];
-		this.imageData.data[redIndex] = this.data[otherRedIndex];
-		this.imageData.data[redIndex + 1] = this.data[otherRedIndex + 1];
-		this.imageData.data[redIndex + 2] = this.data[otherRedIndex + 2];
-		this.imageData.data[redIndex + 3] = this.data[otherRedIndex + 3];
+		this.data[redIndex] = this.data[otherRedIndex];
+		this.data[redIndex + 1] = this.data[otherRedIndex + 1];
+		this.data[redIndex + 2] = this.data[otherRedIndex + 2];
+		this.data[redIndex + 3] = this.data[otherRedIndex + 3];
 		this.data[otherRedIndex] = tempRed;
 		this.data[otherRedIndex + 1] = tempGreen;
 		this.data[otherRedIndex + 2] = tempBlue;
 		this.data[otherRedIndex + 3] = tempAlpha;
+	}
+	swapAt(x1, y1, x2, y2)
+	{
+		var pixel1 = this.getPixel(x1, y1);
+		var pixel2 = this.getPixel(x2, y2);
+		this.swap(pixel1, pixel2);
 	}
 }
 

@@ -1,4 +1,5 @@
 const REFRESH_RATE = 100 * 1/60;
+const DEFAULT_IMG = "default.jpg";
 
 class Controller
 {
@@ -16,7 +17,7 @@ class Controller
 		this.previewContainer.setAttribute("id", "preview");
 		this.container.appendChild(this.previewContainer);
 		//Create the source, then the preview.
-		this.source = new Source("testImg.png");
+		this.source = new Source(DEFAULT_IMG);
 		this.preview = new Preview(this.source, this.previewContainer);
 		//Create a list of sorters.
 		this.sorters = [];
@@ -29,14 +30,14 @@ class Controller
 	}
 	click()
 	{
-		var distance = Math.sqrt(this.pointerInput.dx ** 2 + this.pointerInput.dy ** 2);
-		distance = Math.floor(distance) + 1;
 		var scale = 1 / this.preview.scale;
-		var iterationSteps = Math.floor(distance * this.preview.scale);
-		for(var t = 0; t < iterationSteps; t++)
+		var distance = Math.sqrt(this.pointerInput.dx ** 2 + this.pointerInput.dy ** 2);
+		distance *= scale;
+		distance = Math.floor(distance);
+		for(var t = 0; t < distance; t++)
 		{
-			var x = Math.floor(scale * this.pointerInput.x - this.pointerInput.dx / distance * t * scale);
-			var y = Math.floor(scale * this.pointerInput.y - this.pointerInput.dy / distance * t * scale);
+			var x = Math.floor(scale * this.pointerInput.x - this.pointerInput.dx / distance * t );
+			var y = Math.floor(scale * this.pointerInput.y - this.pointerInput.dy / distance * t);
 			this.sorterCreator.create(this.tmax, x, y, this.theta);
 		}
 	}
