@@ -15,6 +15,8 @@ class PointerListener
 			this.owner.click();
 		}
 	}
+	//Touchstart is the same as touchInput, but dx is set to 0.
+	//This is a bad design (don't repeat yourself).
 	touchStart(event)
 	{
 		//Only perform clicks on single-touch.
@@ -83,20 +85,48 @@ class PointerListener
 	
 }
 
-class ConfigurationInput
-{
-	constructor(initConfig)
-	{
-		this.config = initConfig;
-	}
-	getValue(){ return this.config; }
-}
-
-class AngleInput extends ConfigurationInput
+class AngleInput
 {
 	constructor(container)
 	{
-		super(90);
-		
+		this.container = container;
+		//Create HTML elements.
+		this.inputBox = document.createElement("input");
+		this.inputCanvas = document.createElement("canvas");
+		this.subcontainer = document.createElement("div");	
+		//Put the subcontainer inside the container.
+		this.container.appendChild(this.subcontainer);
+		//Put the canvas & input box inside the subcontainer.
+		this.subcontainer.appendChild(this.inputCircle);
+		this.subcontainer.appendChild(this.inputBox);
+		//Start setting up the canvas.
+		this.context = this.inputCircle.getContext("2d");
+		this.inputCanvas.width = 100;
+		this.inputCanvas.height = 100;
+		this.theta = Math.PI / 2;
+		this.pointerListener = new PointerListener(this, this.inputCanvas);
+	}
+	getDegrees(){ return this.theta * 180 / Math.PI; }
+	getRadians(){ return this.theta; }
+	setDegrees(degrees){ this.theta = degrees * Math.PI / 180; }
+	setRadians(radians){ this.theta = radians; }
+	draw()
+	{
+		//clear the drawing.
+		this.context.clearRect(0,0,100,100);
+		//draw a circle.
+		this.context.beginPath();
+		this.context.arc(50, 50, 50, 0, Math.PI * 2);
+		//Draw a line indicating the direction.
+		this.context.moveTo(50,50);
+		this.context.lineTo(50 + 50 * Math.cos(this.theta), 50 + 50 * Math.sin(this.theta));
+		this.context.stroke();
+	}
+	click()
+	{
+		var y = 50 - this.pointerListener.y;
+		var x = 50 - this.pointerListener.x;
+		this.theta = Math.atan2(y,x);
+		this.draw();
 	}
 }
