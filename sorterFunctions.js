@@ -6,10 +6,13 @@ function init()
 	controller = new Controller(mainLayer);
 }
 
-function circleSort(x,y,r)
+function circleSort(r)
 {
+	var x = controller.pointerInput.x;
+	var y = controller.pointerInput.y;
     for(var i = 0; i < 360; i++)
     {
-		
+		var sorter = new Sorter(controller.source.pixelmap, x, y, i, r);
+		controller.sorters.push(sorter);
     }
 }
