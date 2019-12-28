@@ -56,10 +56,12 @@ class Preview
 	}
 	updateScale()
 	{
+		this.scale = 1;
+		/*
 		var targetHeight = Math.max(window.innerHeight - HEIGHT_PADDING, MIN_HEIGHT);
 		var targetWidth = Math.max(window.innerWidth - WIDTH_PADDING, MIN_WIDTH);
 		this.scale = targetHeight / this.source.image.height;
-
+		*/
 	}
 	setDimensions()
 	{

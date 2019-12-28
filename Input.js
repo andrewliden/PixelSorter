@@ -15,8 +15,37 @@ class PointerListener
 			this.owner.click();
 		}
 	}
+	touchStart(event)
+	{
+		//Only perform clicks on single-touch.
+		if(event.targetTouches.length == 1)
+		{
+			var touch = event.targetTouches[0];
+			var boundingRect = event.target.getBoundingClientRect();
+			var offsetX = touch.pageX - boundingRect.left;
+			var offsetY = touch.pageY - boundingRect.top;
+			this.dx = 0;
+			this.dy = 0;
+			this.x = offsetX;
+			this.y = offsetY;
+			this.owner.click();
+		}
+	}
 	touchInput(event)
 	{
+		//Only perform clicks on single-touch.
+		if(event.targetTouches.length == 1)
+		{
+			var touch = event.targetTouches[0];
+			var boundingRect = event.target.getBoundingClientRect();
+			var offsetX = touch.pageX - boundingRect.left;
+			var offsetY = touch.pageY - boundingRect.top;
+			this.dx = this.x - offsetX;
+			this.dy = this.y - offsetY;
+			this.x = offsetX;
+			this.y = offsetY;
+			this.owner.click();
+		}
 		
 	}
 	constructor(owner, htmlElement)
@@ -37,8 +66,15 @@ class PointerListener
 			selfReference.touchInput(event);
 			event.preventDefault();
 		}
+		this.touchStartListenFunction = function(event)
+		{
+			selfReference.touchStart(event);
+			event.preventDefault();
+		}
 		htmlElement.addEventListener("mousedown", this.mouseListenFunction);
 		htmlElement.addEventListener("mousemove", this.mouseListenFunction);
+		htmlElement.addEventListener("touchstart", this.touchStartListenFunction);
+		htmlElement.addEventListener("touchmove", this.touchListenFunction);
 		this.x = 0;
 		this.y = 0;
 		this.dx = 0;
