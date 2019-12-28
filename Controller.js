@@ -1,4 +1,4 @@
-const REFRESH_RATE = 100 * 1/60;
+const REFRESH_RATE = 100 * 1/600;
 const DEFAULT_IMG = "default.jpg";
 
 class Controller
@@ -27,9 +27,15 @@ class Controller
 		this.start();
 		this.theta = Math.PI / 2;
 		this.tmax = 100;
+		//Create a div to put the inputs in.
+		this.inputsContainer = document.createElement("div");
+		this.inputsContainer.setAttribute("id", "inputs");
+		this.container.appendChild(this.inputsContainer);
+		this.angleInput = new AngleInput(this.inputsContainer);
 	}
 	click()
 	{
+		this.theta = this.angleInput.theta;
 		var scale = 1 / this.preview.scale;
 		var distance = Math.sqrt(this.pointerInput.dx ** 2 + this.pointerInput.dy ** 2);
 		distance *= scale;

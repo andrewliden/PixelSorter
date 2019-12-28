@@ -79,6 +79,7 @@ class SorterCreator
 		return !(startX < 0 | startX > width | startY < 0 | startY > height);
 	}
 	//Use the law of sines to figure out how far away ray 1 is from ray 2.
+	//This may need revised.
 	distanceTo(x1, y1, theta1, x2, y2, theta2, tmax)
 	{
 		var dx = x1 - x2;
@@ -93,6 +94,13 @@ class SorterCreator
 		else
 			return Math.round(vectorDistance);
 	}
+	sortersCollisionCheck(startX, startY, theta, tmax)
+	{
+		var sorters = this.controller.sorters;
+		for(var sorter of sorters)
+			tmax = Math.min(tmax, this.distanceTo(startX, startY, theta, sorter.x, sorter.y, sorter.theta, sorter.tmax));
+		return tmax;
+	}
 	collisionCheck(startX, startY, theta, tmax)
 	{
 		var image = this.controller.source.image;
@@ -102,9 +110,7 @@ class SorterCreator
 		var topEdge = this.distanceTo(startX, startY, theta, 0, 0, 0, Infinity);
 		var bottomEdge = this.distanceTo(startX, startY, theta, 0, image.height, 0, Infinity);
 		tmax = Math.min(tmax, leftEdge, rightEdge, topEdge, bottomEdge);
-		var sorters = this.controller.sorters;
-		for(var sorter of sorters)
-			tmax = Math.min(tmax, this.distanceTo(startX, startY, theta, sorter.x, sorter.y, sorter.theta, sorter.tmax));
+		tmax = this.sortersCollisionCheck(startX, startY, theta, tmax);
 		return tmax;
 	}
 	createMaxPixels(maxPixels, startX, startY, theta)

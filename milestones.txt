@@ -1,6 +1,6 @@
 1. Basic functionality - done
-2. configuration/input
-3. touch support
+2. configuration/input - in progress
+3. touch support - mostly done
 4. image saving
 5. custom image loading
 6. refactor

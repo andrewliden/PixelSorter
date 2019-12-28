@@ -87,6 +87,44 @@ class PointerListener
 
 class AngleInput
 {
+	getDegrees(){ return this.theta * 180 / Math.PI; }
+	getRadians(){ return this.theta; }
+	setDegrees(degrees){ this.theta = degrees * Math.PI / 180; }
+	setRadians(radians){ this.theta = radians; }
+	updateInputBox()
+	{
+		this.inputBox.value = this.getDegrees();
+	}
+	draw()
+	{
+		//clear the drawing.
+		this.context.clearRect(0,0,this.inputCanvas.width,this.inputCanvas.height);
+		//draw a circle.
+		this.context.beginPath();
+		this.context.arc(this.inputCanvas.width / 2, this.inputCanvas.height / 2, this.inputCanvas.width / 2, 0, Math.PI * 2);
+		//Draw a line indicating the direction.
+		this.context.moveTo(50,50);
+		this.context.lineTo(50 + 50 * Math.cos(this.theta), 50 + 50 * Math.sin(this.theta));
+		this.context.stroke();
+	}
+	click()
+	{
+		var y = this.pointerListener.y - 50;
+		var x = this.pointerListener.x - 50;
+		this.theta = Math.atan2(y,x);
+		this.draw();
+		this.updateInputBox();
+	}
+	createInputBoxListener()
+	{
+		var selfReference = this;
+		this.updateFromInputBox = function(event)
+		{
+			selfReference.setDegrees(selfReference.inputBox.value);
+			selfReference.draw();
+		}
+		this.inputBox.addEventListener("input", this.updateFromInputBox);
+	}
 	constructor(container)
 	{
 		this.container = container;
@@ -97,36 +135,16 @@ class AngleInput
 		//Put the subcontainer inside the container.
 		this.container.appendChild(this.subcontainer);
 		//Put the canvas & input box inside the subcontainer.
-		this.subcontainer.appendChild(this.inputCircle);
+		this.subcontainer.appendChild(this.inputCanvas);
 		this.subcontainer.appendChild(this.inputBox);
 		//Start setting up the canvas.
-		this.context = this.inputCircle.getContext("2d");
+		this.context = this.inputCanvas.getContext("2d");
 		this.inputCanvas.width = 100;
 		this.inputCanvas.height = 100;
 		this.theta = Math.PI / 2;
 		this.pointerListener = new PointerListener(this, this.inputCanvas);
-	}
-	getDegrees(){ return this.theta * 180 / Math.PI; }
-	getRadians(){ return this.theta; }
-	setDegrees(degrees){ this.theta = degrees * Math.PI / 180; }
-	setRadians(radians){ this.theta = radians; }
-	draw()
-	{
-		//clear the drawing.
-		this.context.clearRect(0,0,100,100);
-		//draw a circle.
-		this.context.beginPath();
-		this.context.arc(50, 50, 50, 0, Math.PI * 2);
-		//Draw a line indicating the direction.
-		this.context.moveTo(50,50);
-		this.context.lineTo(50 + 50 * Math.cos(this.theta), 50 + 50 * Math.sin(this.theta));
-		this.context.stroke();
-	}
-	click()
-	{
-		var y = 50 - this.pointerListener.y;
-		var x = 50 - this.pointerListener.x;
-		this.theta = Math.atan2(y,x);
+		this.createInputBoxListener();
 		this.draw();
+		this.updateInputBox();
 	}
 }
