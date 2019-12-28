@@ -1,0 +1,21 @@
+html
+{
+	padding:0px;
+	margin: 0px;
+}
+
+#main
+{
+	margin: auto;
+}
+
+#inputs
+{
+	
+}
+
+#angleinput
+{
+	display: grid;
+	grid-rows: auto auto;
+}

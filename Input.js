@@ -131,7 +131,8 @@ class AngleInput
 		//Create HTML elements.
 		this.inputBox = document.createElement("input");
 		this.inputCanvas = document.createElement("canvas");
-		this.subcontainer = document.createElement("div");	
+		this.subcontainer = document.createElement("div");
+		this.subcontainer.setAttribute("id", "angleinput");
 		//Put the subcontainer inside the container.
 		this.container.appendChild(this.subcontainer);
 		//Put the canvas & input box inside the subcontainer.
