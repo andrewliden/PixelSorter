@@ -11,6 +11,16 @@ class CoordinatePair
 
 class Sorter
 {
+	addCoordinate(x, y)
+	{
+		if(this.pixelmap.isBusy(x, y) == false)
+		{
+			var last = this.coordinatesList.last
+			var coordinate = new CoordinatePair(x, y);
+			this.pixelmap.setBusy(x, y);
+			this.coordinatesList.push(coordinate);
+		}
+	}
 	//Doing trig every step sounds...bad.
 	//How about we do all the trig ahead of time and just make a list of points?
 	//This function does that.
@@ -19,15 +29,14 @@ class Sorter
 		this.coordinatesList = [];
 		for(var t = 0; t < this.tmax; t++)
 		{
-			var currentX = this.x + Math.floor(t * Math.cos(this.theta));
-			var currentY = this.y + Math.floor(t * Math.sin(this.theta));
-			var currentCoordinate = new CoordinatePair(currentX, currentY);
+			var currentX = this.x + t * Math.cos(this.theta);
+			var currentY = this.y + t * Math.sin(this.theta);
 			var prev = this.coordinatesList[t - 1];
 			//Only push this to the list if it's the first entry, or it's a non-duplicate.
 			if(prev == undefined)
-				this.coordinatesList.push(currentCoordinate);
+				this.addCoordinate(currentX, currentY);
 			else if(prev.x != currentX | prev.y != currentY)
-				this.coordinatesList.push(currentCoordinate);		
+				this.addCoordinate(currentX, currentY);		
 		}
 	}
 	constructor(pixelmap, x, y, theta, tmax)
@@ -66,6 +75,12 @@ class Sorter
 		}
 		return swapPerformed;
 	}
+	destroy()
+	{
+		//Free up all the pixels that were reserved by this sorter.
+		for(var coordinate of this.coordinatesList)
+			this.pixelmap.setNotBusy(coordinate.x, coordinate.y);
+	}
 }
 
 //This class encapsulates the creation of sorter objects.
@@ -87,19 +102,14 @@ class SorterCreator
 		var distance = Math.sqrt(dx ** 2 + dy ** 2);
 		var angle = Math.atan2(dy, dx);
 		var vectorDistance = Math.sin(theta2 - angle) * distance / Math.sin(theta1 - theta2);
-		if(vectorDistance < 0 | vectorDistance == undefined)
+		if(vectorDistance < 0)
+			return Infinity;
+		else if(vectorDistance == undefined)
 			return Infinity;
 		else if(vectorDistance > tmax)
 			return Infinity;
 		else
-			return Math.round(vectorDistance);
-	}
-	sortersCollisionCheck(startX, startY, theta, tmax)
-	{
-		var sorters = this.controller.sorters;
-		for(var sorter of sorters)
-			tmax = Math.min(tmax, this.distanceTo(startX, startY, theta, sorter.x, sorter.y, sorter.theta, sorter.tmax));
-		return tmax;
+			return vectorDistance;
 	}
 	collisionCheck(startX, startY, theta, tmax)
 	{
@@ -110,7 +120,6 @@ class SorterCreator
 		var topEdge = this.distanceTo(startX, startY, theta, 0, 0, 0, Infinity);
 		var bottomEdge = this.distanceTo(startX, startY, theta, 0, image.height, 0, Infinity);
 		tmax = Math.min(tmax, leftEdge, rightEdge, topEdge, bottomEdge);
-		tmax = this.sortersCollisionCheck(startX, startY, theta, tmax);
 		return tmax;
 	}
 	createMaxPixels(maxPixels, startX, startY, theta)

@@ -18,4 +18,11 @@ html
 {
 	display: grid;
 	grid-rows: auto auto;
+	width: 110px;
+	padding: 10px;
+}
+
+#angleinput input
+{
+	width: 100px;
 }

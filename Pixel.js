@@ -6,6 +6,8 @@ class PixelMap
 	{
 		this.imagedata = this.context.getImageData(0, 0, this.context.canvas.width, this.context.canvas.height);
 		this.data = this.imagedata.data;
+		//Maintain a list of busy pixels.
+		this.busy = new Array(this.data.length / 4);
 	}
 	constructor(context)
 	{
@@ -15,6 +17,8 @@ class PixelMap
 	//getPixel returns the index of the red pixel at the given x,y pair.
 	getPixel(x, y)
 	{
+		x = Math.floor(x);
+		y = Math.floor(y);
 		var index = y * this.imagedata.width * 4;
 		index += x * 4;
 		return index;
@@ -69,8 +73,31 @@ class PixelMap
 	}
 	swapAt(x1, y1, x2, y2)
 	{
+		x1 = Math.floor(x1);
+		x2 = Math.floor(x2);
+		y1 = Math.floor(y1);
+		y2 = Math.floor(y2);
 		var pixel1 = this.getPixel(x1, y1);
 		var pixel2 = this.getPixel(x2, y2);
 		this.swap(pixel1, pixel2);
+	}
+	isBusy(x, y)
+	{
+		var index = this.getPixel(x,y) / 4;
+		var result = this.busy[index];
+		if(result == true)
+			return true;
+		else
+			return false;
+	}
+	setBusy(x, y)
+	{
+		var index = this.getPixel(x,y) / 4;
+		this.busy[index] = true;
+	}
+	setNotBusy(x,y)
+	{
+		var index = this.getPixel(x,y) / 4;
+		this.busy[index] = false;
 	}
 }

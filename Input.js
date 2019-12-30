@@ -149,3 +149,24 @@ class AngleInput
 		this.updateInputBox();
 	}
 }
+
+class SliderInput
+{
+	createElements()
+	{
+		var label = document.createElement("label");
+		
+		var input = document.createElement("input");
+		input.setAttribute("type", "range");
+		input.setAttribute("min", "0");
+		input.setAttribute("max", this.max);
+		
+	}
+	constructor(container, labeltext, max)
+	{
+		this.max = max;
+		this.container = container;
+		this.labeltext = labeltext;
+		this.createElements();
+	}
+}

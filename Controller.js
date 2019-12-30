@@ -39,11 +39,11 @@ class Controller
 		var scale = 1 / this.preview.scale;
 		var distance = Math.sqrt(this.pointerInput.dx ** 2 + this.pointerInput.dy ** 2);
 		distance *= scale;
-		distance = Math.floor(distance);
+		distance = distance;
 		for(var t = 0; t < distance; t++)
 		{
-			var x = Math.floor(scale * this.pointerInput.x - this.pointerInput.dx / distance * t );
-			var y = Math.floor(scale * this.pointerInput.y - this.pointerInput.dy / distance * t);
+			var x = scale * this.pointerInput.x - this.pointerInput.dx / distance * t ;
+			var y = scale * this.pointerInput.y - this.pointerInput.dy / distance * t;
 			this.sorterCreator.create(this.tmax, x, y, this.theta);
 		}
 	}
@@ -59,6 +59,7 @@ class Controller
 			//then decrement i, since the list is 1 item shorter now.
 			if(!stillSorting)
 			{
+				this.sorters[i].destroy();
 				this.sorters.splice(i, 1);
 				i--;
 			}
