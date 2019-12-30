@@ -11,14 +11,35 @@ class CoordinatePair
 
 class Sorter
 {
+	//This controls the adding of coordinates.
+	// Only valid coordinates will be added to the list.
 	addCoordinate(x, y)
 	{
 		if(this.pixelmap.isBusy(x, y) == false)
 		{
-			var last = this.coordinatesList.last
-			var coordinate = new CoordinatePair(x, y);
-			this.pixelmap.setBusy(x, y);
-			this.coordinatesList.push(coordinate);
+			if(x >= 0 & x < this.pixelmap.imagedata.width)
+				if(y >= 0 & y < this.pixelmap.imagedata.height)
+				{
+					//Check if the previous entry is a duplicate.
+					//Assume that it is not.
+					var duplicate = false;
+					var indexOfLast = this.coordinatesList.length - 1;
+					if(indexOfLast >= 0)
+					{
+						//If a previous entry exists, check it.
+						var prev = this.coordinatesList[indexOfLast];
+						//If the x & y both match, this is a duplicate.
+						if(prev.x == x & prev.y == y)
+							duplciate = true;
+					}
+					if(duplicate == false)
+					{
+						var coordinate = new CoordinatePair(x, y);
+						this.pixelmap.setBusy(x, y);
+						this.coordinatesList.push(coordinate);
+					}
+				}
+
 		}
 	}
 	//Doing trig every step sounds...bad.
@@ -31,12 +52,7 @@ class Sorter
 		{
 			var currentX = this.x + t * Math.cos(this.theta);
 			var currentY = this.y + t * Math.sin(this.theta);
-			var prev = this.coordinatesList[t - 1];
-			//Only push this to the list if it's the first entry, or it's a non-duplicate.
-			if(prev == undefined)
-				this.addCoordinate(currentX, currentY);
-			else if(prev.x != currentX | prev.y != currentY)
-				this.addCoordinate(currentX, currentY);		
+			this.addCoordinate(currentX, currentY);					
 		}
 	}
 	constructor(pixelmap, x, y, theta, tmax)
@@ -86,50 +102,10 @@ class Sorter
 //This class encapsulates the creation of sorter objects.
 class SorterCreator
 {
-	//Make sure the sorter fits in bounds
-	boundsCheck(startX, startY)
-	{
-		var width = this.controller.source.image.width - 1;
-		var height = this.controller.source.image.height - 1;
-		return !(startX < 0 | startX > width | startY < 0 | startY > height);
-	}
-	//Use the law of sines to figure out how far away ray 1 is from ray 2.
-	//This may need revised.
-	distanceTo(x1, y1, theta1, x2, y2, theta2, tmax)
-	{
-		var dx = x1 - x2;
-		var dy = y1 - y2;
-		var distance = Math.sqrt(dx ** 2 + dy ** 2);
-		var angle = Math.atan2(dy, dx);
-		var vectorDistance = Math.sin(theta2 - angle) * distance / Math.sin(theta1 - theta2);
-		if(vectorDistance < 0)
-			return Infinity;
-		else if(vectorDistance == undefined)
-			return Infinity;
-		else if(vectorDistance > tmax)
-			return Infinity;
-		else
-			return vectorDistance;
-	}
-	collisionCheck(startX, startY, theta, tmax)
-	{
-		var image = this.controller.source.image;
-		//Bound the sorter within the edges of the screen.
-		var leftEdge = this.distanceTo(startX, startY, theta, 0, 0, Math.PI / 2, Infinity);
-		var rightEdge = this.distanceTo(startX, startY, theta, image.width, 0, Math.PI / 2, Infinity);
-		var topEdge = this.distanceTo(startX, startY, theta, 0, 0, 0, Infinity);
-		var bottomEdge = this.distanceTo(startX, startY, theta, 0, image.height, 0, Infinity);
-		tmax = Math.min(tmax, leftEdge, rightEdge, topEdge, bottomEdge);
-		return tmax;
-	}
 	createMaxPixels(maxPixels, startX, startY, theta)
 	{
-		var tmax = this.collisionCheck(startX, startY, theta, maxPixels);
-		if(tmax > 0)
-		{
-			var newSorter = new this.sorterType(this.controller.source.pixelmap, startX, startY, theta, tmax);
-			this.controller.sorters.push(newSorter);
-		}
+		var newSorter = new this.sorterType(this.controller.source.pixelmap, startX, startY, theta, maxPixels);
+		this.controller.sorters.push(newSorter);
 	}
 	createHueMatching(hueRange, startX, startY, theta)
 	{
@@ -137,8 +113,7 @@ class SorterCreator
 	}
 	create(maxValue, startX, startY, theta)
 	{
-		if(this.boundsCheck(startX, startY))
-			this.creationFunction(maxValue, startX, startY, theta);
+		this.creationFunction(maxValue, startX, startY, theta);
 	}
 	constructor(controller)
 	{
