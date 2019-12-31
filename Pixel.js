@@ -1,5 +1,5 @@
 ///This is a wrapper around the javascript "imagedata" object, which is a bit clunky to work with.
-//It gets a canvas, then creates an image data object.
+//It gets a context, then creates an image data object.
 class PixelMap
 {
 	updateImageData()
@@ -109,11 +109,14 @@ class PixelMap
 		{
 			for(var x = 0; x < this.context.canvas.width; x++)
 			{
+				//Get the index of the pixel you want to copy.
 				var originalIndex = this.getPixel(x, y);
+				//Get the new location of that pixel, then calculate its new index.
 				var newX = oldHeight - y;
 				var newY = x;
 				var newIndex = newY * replacement.width * 4;
 				newIndex += newX * 4;
+				//copy the pixel data.
 				replacement.data[newIndex] = this.data[originalIndex];
 				replacement.data[newIndex + 1] = this.data[originalIndex + 1];
 				replacement.data[newIndex + 2] = this.data[originalIndex + 2];

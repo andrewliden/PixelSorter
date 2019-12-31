@@ -19,15 +19,12 @@ class Controller
 		this.pointerInput = new PointerListener(this, this.sourceAndPreview.getCanvas());
 		this.start();
 		this.tmax = 100;
-		//Create a div to put the inputs in.
-		this.inputsContainer = document.createElement("div");
-		this.inputsContainer.setAttribute("id", "inputs");
-		this.container.appendChild(this.inputsContainer);
-		this.angleInput = new AngleInput(this.inputsContainer);
+		//Create a toolbox
+		this.toolbox = new Toolbox(this.container);
 	}
 	click()
 	{
-		var theta = this.angleInput.theta;
+		var theta = this.toolbox.getAngle();
 		var scale = 1 / this.sourceAndPreview.getScale();
 		var scaledDx = this.pointerInput.dx * scale;
 		var scaledDy = this.pointerInput.dy * scale;
@@ -57,7 +54,9 @@ class Controller
 			}
 		}
 	}
-	clearSorts()
+	//This clears all sorters and ensures all pixels they used are marked as non-busy.
+	//It's a bit more work, but it keeps pixels from getting stuck.
+	clearSortsAndBusymap()
 	{
 		while(this.sorters.length > 0)
 		{
@@ -65,9 +64,16 @@ class Controller
 			sorter.destroy();
 		}
 	}
+	//This does NOT mark pixels used by sorters as non-busy.
+	//Use this method only if the pixelmap is being reinitialized.
+	clearSorts()
+	{
+
+		this.sorters = [];
+	}
 	refresh()
 	{
-		var theta = this.angleInput.theta;
+		var theta = this.toolbox.getAngle();
 		this.doSorts();
 		this.sourceAndPreview.draw();
 		var cursorSize = this.tmax * this.sourceAndPreview.getScale();

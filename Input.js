@@ -173,7 +173,29 @@ class SliderInput
 	}
 }
 
+class Toolbox
+{
+	constructor(container)
+	{
+		this.container = container;
+		//Create a div to put the inputs in.
+		this.inputsContainer = document.createElement("div");
+		this.inputsContainer.setAttribute("id", "inputs");
+		this.container.appendChild(this.inputsContainer);
+		this.angleInput = new AngleInput(this.inputsContainer);
+	}
+	getAngle(){ return this.angleInput.theta; }
+}
+
 class ImageUpload
+{
+	constructor(container)
+	{
+		
+	}
+}
+
+class ImageSave
 {
 	constructor(container)
 	{
