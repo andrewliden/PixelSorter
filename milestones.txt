@@ -1,7 +1,7 @@
 1. Basic functionality - done
 2. configuration/input - in progress
 3. touch support - mostly done
-4. image saving
+4. image saving - underlying structure done.
 5. custom image loading
 6. refactor
 7. aesthetics
