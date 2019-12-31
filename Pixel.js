@@ -1,3 +1,5 @@
+const SQRT_3 = Math.sqrt(3);
+
 ///This is a wrapper around the javascript "imagedata" object, which is a bit clunky to work with.
 //It gets a context, then creates an image data object.
 class PixelMap
@@ -28,7 +30,7 @@ class PixelMap
 	getHue(redIndex)
 	{
 		//Calculate the y and x values for the hue.
-		var y = 1.732 * (this.data[redIndex + 1] - this.data[redIndex + 2]);
+		var y = SQRT_3 * (this.data[redIndex + 1] - this.data[redIndex + 2]);
 		var x = 2 * this.data[redIndex] - this.data[redIndex + 1] - this.data[redIndex + 2];
 		//Get the hue in radians.
 		var hue = Math.atan2(y,x);
