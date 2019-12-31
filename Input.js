@@ -156,9 +156,9 @@ class SliderInput
 {
 	createElements()
 	{
-		var label = document.createElement("label");
-		
-		var input = document.createElement("input");
+		this.label = document.createElement("label");
+		this.labeltextNode = document.createTextNode(this.labeltext);
+		this.input = document.createElement("input");
 		input.setAttribute("type", "range");
 		input.setAttribute("min", "0");
 		input.setAttribute("max", this.max);
@@ -170,5 +170,13 @@ class SliderInput
 		this.container = container;
 		this.labeltext = labeltext;
 		this.createElements();
+	}
+}
+
+class ImageUpload
+{
+	constructor(container)
+	{
+		
 	}
 }

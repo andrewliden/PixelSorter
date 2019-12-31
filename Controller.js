@@ -29,13 +29,13 @@ class Controller
 	{
 		var theta = this.angleInput.theta;
 		var scale = 1 / this.sourceAndPreview.getScale();
-		var distance = Math.sqrt(this.pointerInput.dx ** 2 + this.pointerInput.dy ** 2);
-		distance *= scale;
-		distance = distance;
+		var scaledDx = this.pointerInput.dx * scale;
+		var scaledDy = this.pointerInput.dy * scale;
+		var distance = Math.sqrt(scaledDx ** 2 + scaledDy ** 2);
 		for(var t = 0; t < distance; t++)
 		{
-			var x = scale * this.pointerInput.x - this.pointerInput.dx / distance * t ;
-			var y = scale * this.pointerInput.y - this.pointerInput.dy / distance * t;
+			var x = scale * this.pointerInput.x - scaledDx / distance * t;
+			var y = scale * this.pointerInput.y - scaledDy / distance * t;
 			this.sorterCreator.create(this.tmax, x, y, theta);
 		}
 	}
@@ -66,7 +66,8 @@ class Controller
 		var theta = this.angleInput.theta;
 		this.doSorts();
 		this.sourceAndPreview.draw();
-		this.sourceAndPreview.drawCursor(this.pointerInput.x, this.pointerInput.y, theta, this.tmax);
+		var cursorSize = this.tmax * this.sourceAndPreview.getScale();
+		this.sourceAndPreview.drawCursor(this.pointerInput.x, this.pointerInput.y, theta, cursorSize);
 	}
 	stop()
 	{
@@ -75,7 +76,7 @@ class Controller
 	setImage(src)
 	{
 		this.clearSorts();
-		this.source.setImage(src);
+		this.sourceAndPreview.setImage(src);
 	}
 	
 	
