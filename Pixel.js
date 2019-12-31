@@ -9,7 +9,7 @@ class PixelMap
 		//Maintain a list of busy pixels.
 		//This list only needs to be 1/4 the size of the image data,
 		//since it's only storing a boolean value, not RGBA data.
-		this.busy = new Array(this.data.length / 4);
+		this.busy = new Int8Array(this.data.length / 4);
 		for(var entry of this.busy)
 			entry = false;
 	}
