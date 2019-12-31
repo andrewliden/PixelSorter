@@ -20,7 +20,7 @@ class Controller
 		this.start();
 		this.tmax = 100;
 		//Create a toolbox
-		this.toolbox = new Toolbox(this.container);
+		this.toolbox = new ConfigToolbox(this.container);
 	}
 	click()
 	{
