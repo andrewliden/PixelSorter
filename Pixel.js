@@ -25,10 +25,11 @@ class PixelMap
 		index += x * 4;
 		return index;
 	}
+	//Something is wrong with this function.
 	getHue(redIndex)
 	{
 		//Calculate the y and x values for the hue.
-		var y = Math.sqrt(3) * (this.data[redIndex + 1] - this.imageData.data[redIndex + 2]);
+		var y = 1.732 * (this.data[redIndex + 1] - this.imageData.data[redIndex + 2]);
 		var x = 2 * this.data[redIndex] - this.data[redIndex + 1] - this.data[redIndex + 2];
 		//Get the hue in radians.
 		var hue = Math.atan2(y,x);

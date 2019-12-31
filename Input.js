@@ -131,13 +131,18 @@ class AngleInput
 	{
 		this.container = container;
 		//Create HTML elements.
+		this.label = document.createElement("label");
+		this.labeltextNode = document.createTextNode("Angle (deg)");
 		this.inputBox = document.createElement("input");
+		this.inputBox.setAttribute("type", "number");
 		this.inputCanvas = document.createElement("canvas");
 		this.subcontainer = document.createElement("div");
 		this.subcontainer.setAttribute("id", "angleinput");
 		//Put the subcontainer inside the container.
 		this.container.appendChild(this.subcontainer);
 		//Put the canvas & input box inside the subcontainer.
+		this.label.appendChild(this.labeltextNode);
+		this.subcontainer.appendChild(this.label);
 		this.subcontainer.appendChild(this.inputCanvas);
 		this.subcontainer.appendChild(this.inputBox);
 		//Start setting up the canvas.
@@ -152,24 +157,89 @@ class AngleInput
 	}
 }
 
+//Boilerplate slider input with a text box for specific values.
 class SliderInput
 {
 	createElements()
 	{
+		//Create the elements
+		this.subcontainer = document.createElement("div");
 		this.label = document.createElement("label");
 		this.labeltextNode = document.createTextNode(this.labeltext);
-		this.input = document.createElement("input");
-		input.setAttribute("type", "range");
-		input.setAttribute("min", "0");
-		input.setAttribute("max", this.max);
-		
+		this.inputSlider = document.createElement("input");
+		this.inputBox = document.createElement("input");
+		//Define attributes.
+		this.inputSlider.setAttribute("type", "range");
+		this.inputSlider.setAttribute("min", "0");
+		this.inputSlider.setAttribute("max", this.max);
+		this.inputBox.setAttribute("type", "number");
+		//Append all of the elements into the container.
+		this.container.appendChild(this.subcontainer);
+		this.subcontainer.appendChild(this.label);
+		this.label.appendChild(this.labeltextNode);
+		this.subcontainer.appendChild(this.inputSlider);
+		this.subcontainer.appendChild(this.inputBox);
+		this.inputBox.value = this.value;
+		this.inputSlider.value = this.value;
 	}
-	constructor(container, labeltext, max)
+	createListeners()
+	{
+		//Get a reference to this object to avoid weird event-listener scope resolution.
+		var selfReference = this;
+		this.updateValueFromSlider = function()
+		{
+			selfReference.value = selfReference.inputSlider.value;
+			selfReference.inputBox.value = selfReference.value;
+		}
+		this.updateValueFromBox = function()
+		{
+			//Clamp the value from the input box.
+			if(selfReference.inputBox.value < 0)
+				selfReference.inputBox.value = 0;
+			else if(selfReference.inputBox.value > selfReference.max)
+				selfReference.inputBox.value = selfReference.max;
+			selfReference.value = selfReference.inputBox.value;
+			selfReference.inputSlider.value = selfReference.value;
+		}
+		this.inputSlider.addEventListener("input", this.updateValueFromSlider);
+		this.inputBox.addEventListener("input", this.updateValueFromBox);
+	}
+	constructor(container, labeltext, initialValue, max)
 	{
 		this.max = max;
 		this.container = container;
 		this.labeltext = labeltext;
+		this.value = initialValue;
 		this.createElements();
+		this.createListeners();
+	}
+	updateMax(newMax)
+	{
+		this.max = newMax;
+		inputSlider.setAttribute("max", this.max);
+		if(this.value > this.max)
+		{
+			this.value = this.max;
+			this.inputBox.value = this.max;
+			this.inputSlider.value = this.max;
+		}
+	}
+	getValue(){ return this.value; }
+}
+
+class LengthSlider extends SliderInput
+{
+	constructor(container, max)
+	{
+		super(container, "Sorter Length", 100, max)
+	}
+}
+
+class HueSlider extends SliderInput
+{
+	constructor(container)
+	{
+		super(container, "Hue Threshold", 60, 180);
 	}
 }
 

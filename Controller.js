@@ -18,22 +18,34 @@ class Controller
 		//Create an input listener
 		this.pointerInput = new PointerListener(this, this.sourceAndPreview.getCanvas());
 		this.start();
-		this.tmax = 100;
 		//Create a toolbox
 		this.toolbox = new ConfigToolbox(this.container);
 	}
 	click()
 	{
 		var theta = this.toolbox.getAngle();
+		var length = this.toolbox.getLength();
+		var hueRange = this.toolbox.getHueRange();
 		var scale = 1 / this.sourceAndPreview.getScale();
 		var scaledDx = this.pointerInput.dx * scale;
 		var scaledDy = this.pointerInput.dy * scale;
-		var distance = Math.sqrt(scaledDx ** 2 + scaledDy ** 2);
-		for(var t = 0; t < distance; t++)
+		//If the pointer wasn't moving, just add 1 sorter.
+		if(scaledDx == 0 & scaledDy == 0)
 		{
-			var x = scale * this.pointerInput.x - scaledDx / distance * t;
-			var y = scale * this.pointerInput.y - scaledDy / distance * t;
-			this.sorterCreator.create(this.tmax, x, y, theta);
+			var x = scale * this.pointerInput.x
+			var y = scale * this.pointerInput.y
+			this.sorterCreator.create(length, x, y, theta);
+		}
+		else
+		{
+			//If the pointer was moving, add sorters along the path the pointer
+			var distance = Math.sqrt(scaledDx ** 2 + scaledDy ** 2);
+			for(var t = 0; t < distance; t++)
+			{
+				var x = scale * this.pointerInput.x - scaledDx / distance * t;
+				var y = scale * this.pointerInput.y - scaledDy / distance * t;
+				this.sorterCreator.create(x, y, theta, length, hueRange);
+			}
 		}
 	}
 	doSorts()
@@ -68,15 +80,15 @@ class Controller
 	//Use this method only if the pixelmap is being reinitialized.
 	clearSorts()
 	{
-
 		this.sorters = [];
 	}
 	refresh()
 	{
 		var theta = this.toolbox.getAngle();
+		var length = this.toolbox.getLength();
 		this.doSorts();
 		this.sourceAndPreview.draw();
-		var cursorSize = this.tmax * this.sourceAndPreview.getScale();
+		var cursorSize = length * this.sourceAndPreview.getScale();
 		this.sourceAndPreview.drawCursor(this.pointerInput.x, this.pointerInput.y, theta, cursorSize);
 	}
 	stop()

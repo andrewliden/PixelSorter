@@ -1,5 +1,5 @@
 const MIN_HEIGHT = 100;
-const HEIGHT_PADDING = 150;
+const HEIGHT_PADDING = 200;
 const MIN_WIDTH = 100;
 const WIDTH_PADDING = 50;
 const DEFAULT_IMG = "default.jpg";
