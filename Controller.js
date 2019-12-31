@@ -1,5 +1,4 @@
 const REFRESH_RATE = 100 * 1/600;
-const DEFAULT_IMG = "default.jpg";
 
 class Controller
 {
@@ -12,18 +11,12 @@ class Controller
 	{
 		//Put this in a container (some html element, typically a div)
 		this.container = container;
-		//Create a div to put the preview in.
-		this.previewContainer = document.createElement("div");
-		this.previewContainer.setAttribute("id", "preview");
-		this.container.appendChild(this.previewContainer);
-		//Create the source, then the preview.
-		this.source = new Source(DEFAULT_IMG);
-		this.preview = new Preview(this.source, this.previewContainer);
+		this.sourceAndPreview = new SourcePreviewComposite(this.container);
 		//Create a list of sorters.
 		this.sorters = [];
 		this.sorterCreator = new SorterCreator(this);
 		//Create an input listener
-		this.pointerInput = new PointerListener(this, this.preview.canvas);
+		this.pointerInput = new PointerListener(this, this.sourceAndPreview.getCanvas());
 		this.start();
 		this.theta = Math.PI / 2;
 		this.tmax = 100;
@@ -36,7 +29,7 @@ class Controller
 	click()
 	{
 		this.theta = this.angleInput.theta;
-		var scale = 1 / this.preview.scale;
+		var scale = 1 / this.sourceAndPreview.getScale();
 		var distance = Math.sqrt(this.pointerInput.dx ** 2 + this.pointerInput.dy ** 2);
 		distance *= scale;
 		distance = distance;
@@ -71,9 +64,10 @@ class Controller
 	}
 	refresh()
 	{
+		this.theta = this.angleInput.theta;
 		this.doSorts();
-		this.source.draw();
-		this.preview.draw();
+		this.sourceAndPreview.draw();
+		this.sourceAndPreview.drawCursor(this.pointerInput.x, this.pointerInput.y, this.theta, this.tmax);
 	}
 	stop()
 	{

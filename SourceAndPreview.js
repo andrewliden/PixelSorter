@@ -2,6 +2,7 @@ const MIN_HEIGHT = 100;
 const HEIGHT_PADDING = 200;
 const MIN_WIDTH = 100;
 const WIDTH_PADDING = 50;
+const DEFAULT_IMG = "default.jpg";
 
 //This class contains the actual image and ways for the user to interact with it.
 class Source
@@ -77,5 +78,74 @@ class Preview
 		var context = this.context;
 		var image = this.source.canvas;
 		context.drawImage(image, 0, 0, canvas.width, canvas.height);
+	}
+}
+
+class Cursor
+{
+	constructor(context)
+	{
+		this.context = context;
+	}
+	draw(x, y, theta, length)
+	{
+		//Find the end point of the path.
+		var finalX = x + Math.cos(theta) * length;
+		var finalY = y + Math.sin(theta) * length;
+		//Create a path, 
+		//then make a line from the origin point to the final point.
+		this.context.beginPath();
+		this.context.moveTo(x, y);
+		this.context.lineTo(finalX, finalY);
+		//Put a thick white stroke, with a thinner black stroke.
+		this.context.strokeStyle = "white";
+		this.context.lineWidth = 3;
+		this.context.stroke();
+		this.context.strokeStyle = "black";
+		this.lineWidth = 1;
+		this.context.stroke();
+	}
+}
+
+//Simplifies client interaction with the source & preview
+// so that the two behave as one object.
+// Also adds a cursor.
+class SourcePreviewComposite
+{
+	constructor(container)
+	{
+		this.container = container;
+		this.source = new Source(DEFAULT_IMG);
+		//Create a div to put the preview in.
+		this.previewContainer = document.createElement("div");
+		this.previewContainer.setAttribute("id", "preview");
+		this.container.appendChild(this.previewContainer);
+		this.preview = new Preview(this.source, this.container);
+		this.cursor = new Cursor(this.preview.context);
+	}
+	draw()
+	{
+		this.source.draw();
+		this.preview.draw();
+	}
+	drawCursor(x, y, theta, length)
+	{
+		this.cursor.draw(x, y, theta, length);
+	}
+	setImage(src)
+	{
+		this.source.setImage(src);
+	}
+	getPixelmap()
+	{
+		return this.source.pixelmap;
+	}
+	getCanvas()
+	{
+		return this.preview.canvas;
+	}
+	getScale()
+	{
+		return this.preview.scale;
 	}
 }
