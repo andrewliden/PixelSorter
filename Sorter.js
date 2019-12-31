@@ -2,9 +2,7 @@ class Sorter
 {
 	hueInRange(pixel)
 	{
-		//var pixelHue = this.pixelmap.getHue(pixel);
-		return true; //Debug
-		/*
+		var pixelHue = this.pixelmap.getHue(pixel);
 		//If the hue hasn't been defined yet, define it and say it's in range.
 		if(this.hue == undefined)
 		{
@@ -49,7 +47,6 @@ class Sorter
 					inRange = true;
 			return inRange;
 		}
-		*/
 	}
 	//This controls the adding of pixels.
 	// Only valid pixels will be added to the list.
