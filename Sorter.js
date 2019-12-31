@@ -4,11 +4,11 @@ class Sorter
 	// Only valid pixels will be added to the list.
 	addPixel(x, y)
 	{
-		var pixel = this.pixelmap.getPixel(x, y);
-		if(this.pixelmap.isBusy(pixel) == false)
-		{
-			if(x >= 0 & x < this.pixelmap.imagedata.width)
-				if(y >= 0 & y < this.pixelmap.imagedata.height)
+		if(x >= 0 & x < this.pixelmap.imagedata.width)
+			if(y >= 0 & y < this.pixelmap.imagedata.height)
+			{
+				var pixel = this.pixelmap.getPixel(x, y);
+				if(this.pixelmap.isBusy(pixel) == false)
 				{
 					//Check if the previous entry is a duplicate.
 					//Assume that it is not.
@@ -27,8 +27,7 @@ class Sorter
 						this.pixelmap.setBusy(pixel);
 						this.pixelList.push(pixel);
 					}
-				}
-
+			}
 		}
 	}
 	//Doing trig every step sounds...bad.
