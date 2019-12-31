@@ -7,6 +7,8 @@ class PixelMap
 		this.imagedata = this.context.getImageData(0, 0, this.context.canvas.width, this.context.canvas.height);
 		this.data = this.imagedata.data;
 		//Maintain a list of busy pixels.
+		//This list only needs to be 1/4 the size of the image data,
+		//since it's only storing a boolean value, not RGBA data.
 		this.busy = new Array(this.data.length / 4);
 	}
 	constructor(context)
@@ -22,6 +24,13 @@ class PixelMap
 		var index = y * this.imagedata.width * 4;
 		index += x * 4;
 		return index;
+	}
+	getBusyIndex(x, y)
+	{
+		//To get the index of a pixel on the "busy" array,
+		//just divide it's normal pixel index by 4.
+		var index = this.getPixel(x, y);
+		return index / 4;
 	}
 	getHue(redIndex)
 	{
@@ -83,7 +92,7 @@ class PixelMap
 	}
 	isBusy(x, y)
 	{
-		var index = this.getPixel(x,y) / 4;
+		var index = this.getBusyIndex(x, y);
 		var result = this.busy[index];
 		if(result == true)
 			return true;
@@ -92,12 +101,12 @@ class PixelMap
 	}
 	setBusy(x, y)
 	{
-		var index = this.getPixel(x,y) / 4;
+		var index = this.getBusyIndex(x, y);
 		this.busy[index] = true;
 	}
 	setNotBusy(x,y)
 	{
-		var index = this.getPixel(x,y) / 4;
+		var index = this.getBusyIndex(x, y);
 		this.busy[index] = false;
 	}
 }
