@@ -1,4 +1,3 @@
-
 //Encapsulates touch & mouse behaviors into one object
 //Calls "click" on the owner when a pointer input happens.
 //keeps track of important stats such as x & y values and movement values.
@@ -97,20 +96,23 @@ class AngleInput
 	}
 	draw()
 	{
+		var center = this.inputCanvas.width / 2
+		var radius = center - 5;
 		//clear the drawing.
 		this.context.clearRect(0,0,this.inputCanvas.width,this.inputCanvas.height);
 		//draw a circle.
 		this.context.beginPath();
-		this.context.arc(this.inputCanvas.width / 2, this.inputCanvas.height / 2, this.inputCanvas.width / 2, 0, Math.PI * 2);
+		this.context.arc(center, center, radius, 0, Math.PI * 2);
 		//Draw a line indicating the direction.
-		this.context.moveTo(50,50);
-		this.context.lineTo(50 + 50 * Math.cos(this.theta), 50 + 50 * Math.sin(this.theta));
+		this.context.moveTo(center, center);
+		this.context.lineTo(center + radius * Math.cos(this.theta), center + radius * Math.sin(this.theta));
 		this.context.stroke();
 	}
 	click()
 	{
-		var y = this.pointerListener.y - 50;
-		var x = this.pointerListener.x - 50;
+		var center = this.inputCanvas.width / 2
+		var y = this.pointerListener.y - center;
+		var x = this.pointerListener.x - center;
 		this.theta = Math.atan2(y,x);
 		this.draw();
 		this.updateInputBox();

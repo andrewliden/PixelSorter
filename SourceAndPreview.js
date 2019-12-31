@@ -99,10 +99,10 @@ class Cursor
 		this.context.lineTo(finalX, finalY);
 		//Put a thick white stroke, with a thinner black stroke.
 		this.context.strokeStyle = "white";
-		this.context.lineWidth = 3;
+		this.context.lineWidth = 4;
 		this.context.stroke();
 		this.context.strokeStyle = "black";
-		this.lineWidth = 1;
+		this.context.lineWidth = 2;
 		this.context.stroke();
 	}
 }

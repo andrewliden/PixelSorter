@@ -4,7 +4,8 @@ class Sorter
 	// Only valid pixels will be added to the list.
 	addPixel(x, y)
 	{
-		if(this.pixelmap.isBusy(x, y) == false)
+		var pixel = this.pixelmap.getPixel(x, y);
+		if(this.pixelmap.isBusy(pixel) == false)
 		{
 			if(x >= 0 & x < this.pixelmap.imagedata.width)
 				if(y >= 0 & y < this.pixelmap.imagedata.height)
@@ -23,7 +24,6 @@ class Sorter
 					}
 					if(duplicate == false)
 					{
-						var pixel = this.pixelmap.getPixel(x, y);
 						this.pixelmap.setBusy(pixel);
 						this.pixelList.push(pixel);
 					}
@@ -77,7 +77,7 @@ class Sorter
 	{
 		//Free up all the pixels that were reserved by this sorter.
 		for(var pixel of this.pixelList)
-			this.pixelmap.setBusy(pixel);
+			this.pixelmap.setNotBusy(pixel);
 	}
 }
 

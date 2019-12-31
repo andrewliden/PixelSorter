@@ -10,8 +10,6 @@ class PixelMap
 		//This list only needs to be 1/4 the size of the image data,
 		//since it's only storing a boolean value, not RGBA data.
 		this.busy = new Int8Array(this.data.length / 4);
-		for(var entry of this.busy)
-			entry = false;
 	}
 	constructor(context)
 	{

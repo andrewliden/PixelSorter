@@ -18,7 +18,6 @@ class Controller
 		//Create an input listener
 		this.pointerInput = new PointerListener(this, this.sourceAndPreview.getCanvas());
 		this.start();
-		this.theta = Math.PI / 2;
 		this.tmax = 100;
 		//Create a div to put the inputs in.
 		this.inputsContainer = document.createElement("div");
@@ -28,7 +27,7 @@ class Controller
 	}
 	click()
 	{
-		this.theta = this.angleInput.theta;
+		var theta = this.angleInput.theta;
 		var scale = 1 / this.sourceAndPreview.getScale();
 		var distance = Math.sqrt(this.pointerInput.dx ** 2 + this.pointerInput.dy ** 2);
 		distance *= scale;
@@ -37,7 +36,7 @@ class Controller
 		{
 			var x = scale * this.pointerInput.x - this.pointerInput.dx / distance * t ;
 			var y = scale * this.pointerInput.y - this.pointerInput.dy / distance * t;
-			this.sorterCreator.create(this.tmax, x, y, this.theta);
+			this.sorterCreator.create(this.tmax, x, y, theta);
 		}
 	}
 	doSorts()
@@ -64,10 +63,10 @@ class Controller
 	}
 	refresh()
 	{
-		this.theta = this.angleInput.theta;
+		var theta = this.angleInput.theta;
 		this.doSorts();
 		this.sourceAndPreview.draw();
-		this.sourceAndPreview.drawCursor(this.pointerInput.x, this.pointerInput.y, this.theta, this.tmax);
+		this.sourceAndPreview.drawCursor(this.pointerInput.x, this.pointerInput.y, theta, this.tmax);
 	}
 	stop()
 	{

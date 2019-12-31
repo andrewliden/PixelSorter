@@ -12,7 +12,7 @@ function circleSort(r)
 	var y = controller.pointerInput.y;
     for(var i = 0; i < 360; i++)
     {
-		var sorter = new Sorter(controller.sourceAndPreview.getPixelMap(), x, y, i, r);
+		var sorter = new Sorter(controller.sourceAndPreview.getPixelmap(), x, y, i, r);
 		controller.sorters.push(sorter);
     }
 }
