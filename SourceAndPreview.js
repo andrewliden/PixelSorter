@@ -42,6 +42,14 @@ class Source
 	{
 		this.context.putImageData(this.pixelmap.imagedata, 0,0);
 	}
+	rotate()
+	{
+		this.pixelmap.rotate();
+		var tempWidth = this.canvas.width;
+		this.canvas.width = this.canvas.height;
+		this.canvas.height = tempWidth;
+	}
+
 }
 
 class Preview
@@ -57,10 +65,14 @@ class Preview
 	}
 	updateScale()
 	{
-		this.scale = 1;
+		//Get the potential target width & height.
 		var targetHeight = Math.max(window.innerHeight - HEIGHT_PADDING, MIN_HEIGHT);
 		var targetWidth = Math.max(window.innerWidth - WIDTH_PADDING, MIN_WIDTH);
-		this.scale = targetHeight / this.source.image.height;
+		//Figure out how much you'd need to scale if you were limited by height or width.
+		var heightScale = targetHeight / this.source.image.height;
+		var widthScale = targetWidth / this.source.image.width;
+		//Take the smaller of the two possible scaling factors.
+		this.scale = Math.min(heightScale, widthScale);
 	}
 	setDimensions()
 	{
@@ -145,5 +157,19 @@ class SourcePreviewComposite
 	getScale()
 	{
 		return this.preview.scale;
+	}
+	saveImage()
+	{
+		this.draw();
+		var image = this.source.canvas.toDataURL();
+		var imageDocument = window.open();
+		imageDocument.document.title = "Pixelsorted image";
+		var imageTag = imageDocument.document.createElement("img");
+		imageTag.setAttribute("src", image);
+		imageDocument.document.body.appendChild(imageTag);
+	}
+	rotate()
+	{
+		this.source.rotate();
 	}
 }

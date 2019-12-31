@@ -99,4 +99,30 @@ class PixelMap
 	{
 		this.busy[redIndex / 4] = false;
 	}
+	rotate()
+	{
+		var oldWidth = this.context.canvas.width;
+		var oldHeight = this.context.canvas.height;
+		var replacement = this.context.createImageData(oldHeight, oldWidth);
+		//For each pixel, copy the image data.
+		for(var y = 0; y < this.context.canvas.height; y++)
+		{
+			for(var x = 0; x < this.context.canvas.width; x++)
+			{
+				var originalIndex = this.getPixel(x, y);
+				var newX = oldHeight - y;
+				var newY = x;
+				var newIndex = newY * replacement.width * 4;
+				newIndex += newX * 4;
+				replacement.data[newIndex] = this.data[originalIndex];
+				replacement.data[newIndex + 1] = this.data[originalIndex + 1];
+				replacement.data[newIndex + 2] = this.data[originalIndex + 2];
+				replacement.data[newIndex + 3] = this.data[originalIndex + 3];
+			}
+		}
+		//Replace the image data, then reinitialize the busy-pixel array.
+		this.imagedata = replacement;
+		this.data = replacement.data;
+		this.busy = new Int8Array(this.data.length / 4);
+	}
 }

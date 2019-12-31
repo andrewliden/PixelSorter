@@ -1,4 +1,4 @@
-const REFRESH_RATE = 100 * 1/600;
+const REFRESH_RATE = 100 * 1/60;
 
 class Controller
 {
@@ -59,7 +59,11 @@ class Controller
 	}
 	clearSorts()
 	{
-		this.sorters = [];
+		while(this.sorters.length > 0)
+		{
+			var sorter = this.sorters.pop();
+			sorter.destroy();
+		}
 	}
 	refresh()
 	{
@@ -78,6 +82,10 @@ class Controller
 		this.clearSorts();
 		this.sourceAndPreview.setImage(src);
 	}
-	
+	rotate()
+	{
+		this.clearSorts();
+		this.sourceAndPreview.rotate();
+	}
 	
 }
