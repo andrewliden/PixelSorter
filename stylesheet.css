@@ -19,7 +19,7 @@ body
 #inputs
 {
 	display: grid;
-	grid-template-columns: 110px auto;
+	grid-template-columns: 110px auto auto;
 	grid-column-gap: 10px;
 }
 
@@ -53,4 +53,10 @@ body
 #sliderInputs input
 {
 	display: inline;
+}
+
+#sortercontrols
+{
+	display: grid;
+	grid-template-rows: auto auto;
 }
