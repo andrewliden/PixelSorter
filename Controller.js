@@ -82,8 +82,15 @@ class Controller
 	{
 		this.sorters = [];
 	}
+	//This function clamps the max distance for the sorter length slider to the diagonal length of the image.
+	applyMaxLength()
+	{
+		var maxDist = Math.floor( Math.sqrt( this.sourceAndPreview.getWidth() ** 2 + this.sourceAndPreview.getHeight() ** 2 ) );
+		this.toolbox.setMaxLength(maxDist);
+	}
 	refresh()
 	{
+		this.applyMaxLength();
 		var theta = this.toolbox.getAngle();
 		var length = this.toolbox.getLength();
 		this.doSorts();
@@ -104,6 +111,10 @@ class Controller
 	{
 		this.clearSorts();
 		this.sourceAndPreview.rotate();
+	}
+	saveImage()
+	{
+		this.sourceAndPreview.saveImage();
 	}
 	
 }

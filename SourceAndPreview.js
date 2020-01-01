@@ -142,21 +142,15 @@ class SourcePreviewComposite
 	{
 		this.cursor.draw(x, y, theta, length);
 	}
+	
+	getPixelmap(){ return this.source.pixelmap; }
+	getCanvas(){ return this.preview.canvas; }
+	getScale(){ return this.preview.scale; }
+	getWidth(){ return this.source.canvas.width; }
+	getHeight(){ return this.source.canvas.height; }
 	setImage(src)
-	{
-		this.source.setImage(src);
-	}
-	getPixelmap()
-	{
-		return this.source.pixelmap;
-	}
-	getCanvas()
-	{
-		return this.preview.canvas;
-	}
-	getScale()
-	{
-		return this.preview.scale;
+	{ 
+		this.source.setImage(src); 
 	}
 	saveImage()
 	{

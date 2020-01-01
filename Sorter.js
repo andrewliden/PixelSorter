@@ -14,31 +14,23 @@ class Sorter
 			var inRange = false;
 			var minHue = this.startHue - this.hueRange;
 			var maxHue = this.startHue + this.hueRange;
-			//There's some nasty edge cases here.  The range of hue is 0 - 360.
-			//But, adding or subtracting the range from the hue can yield a result outside the range!
+			//Hue is an angle in degrees, so some special edge-case handling is necessary
 			if(minHue < 0)
 			{
-				//Our minimum was negative!
-				//Figure out how far off set we'd be from 360,
-				//if this negative value were added to it.
+				//When the minimum is under 0, 
+				//check the relevant high degrees, then clamp the minimum to 0.
 				var offset = 360 + minHue;
-				//Check from 360 to that offset
-				//An assumption is made that the comparison hue is from 0 - 360.
 				if(pixelHue >= offset)
 					inRange = true;
-				//Now that we're done checking the edge case, clamp to 0.
 				minHue = 0;
 			}
 			if(maxHue > 360)
 			{
-				//Our maximum was more than 360!
-				//Figure out how much we exceeded 360 by.
+				//When the maximum is over 360,
+				//check the relevant low degrees, then clamp the maximum to 360.
 				var offset = maxHue - 360;
-				//Check from 0 to that excess range.
-				//An assumption here is that comparsionHue ranges from 0 - 360.
 				if(pixelHue <= offset)
 					inRange = true;
-				//Clamp the maxHue calculation to 360 now that we're done checking the edge case.
 				maxHue = 360;
 			}
 			//check the normal case.
@@ -68,9 +60,7 @@ class Sorter
 			this.pixelList.push(pixel);
 		}
 	}
-	//Doing trig every step sounds...bad.
-	//How about we do all the trig ahead of time and just make a list of points?
-	//This function does that.
+	//Creates a lookup table of pixels that this sorter "owns"
 	createPixelList()
 	{
 		this.pixelList = [];
@@ -84,8 +74,12 @@ class Sorter
 			}
 			catch(error)
 			{
+				//If the exception is "break", break the for loop.
+				//If it's something else, throw an error.
 				if(error == "break")
 					break;
+				else
+					throw "Unexpected error while adding a pixel to the list.";
 			}
 		}
 	}
@@ -128,9 +122,65 @@ class Sorter
 	}
 }
 
+class LightnessSorter extends Sorter
+{
+	constructor(pixelmap, x, y, theta, length, hueRange)
+	{
+		super(pixelmap, x, y, theta, length, hueRange);
+	}
+	pixelCompare(pixel1, pixel2)
+	{
+		return this.pixelmap.getLightness(pixel1) > this.pixelmap.getLightness(pixel2);
+	}
+}
+
+class ValueSorter extends Sorter
+{
+	constructor(pixelmap, x, y, theta, length, hueRange)
+	{
+		super(pixelmap, x, y, theta, length, hueRange);
+	}
+	pixelCompare(pixel1, pixel2)
+	{
+		return this.pixelmap.getValue(pixel1) > this.pixelmap.getValue(pixel2);
+	}
+}
+
+class IntensitySorter extends Sorter
+{
+	constructor(pixelmap, x, y, theta, length, hueRange)
+	{
+		super(pixelmap, x, y, theta, length, hueRange);
+	}
+	pixelCompare(pixel1, pixel2)
+	{
+		return this.pixelmap.getIntensity(pixel1) > this.pixelmap.getIntensity(pixel2);
+	}
+}
+
 //This class encapsulates the creation of sorter objects.
 class SorterCreator
 {
+	setType(type)
+	{
+		switch(type)
+		{
+			case "Luma":
+				this.sorterType = Sorter;
+				break;
+			case "Lightness":
+				this.sorterType = LightnessSorter;
+				break;
+			case "Value":
+				this.sorterType = ValueSorter;
+				break;
+			case "Intensity":
+				this.sorterType = IntensitySorter;
+				break;
+			default:
+				this.sorterType = Sorter;
+		}
+	}
 	create(startX, startY, theta, maxPixels, hueRange)
 	{
 		var pixelmap = this.controller.sourceAndPreview.getPixelmap();

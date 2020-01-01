@@ -216,7 +216,7 @@ class SliderInput
 	updateMax(newMax)
 	{
 		this.max = newMax;
-		inputSlider.setAttribute("max", this.max);
+		this.inputSlider.setAttribute("max", this.max);
 		if(this.value > this.max)
 		{
 			this.value = this.max;

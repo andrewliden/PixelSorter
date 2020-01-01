@@ -18,8 +18,11 @@ class ConfigToolbox extends Toolbox
 	{
 		super(container, "inputs");
 		this.angleInput = new AngleInput(this.inputsContainer);
-		this.lengthInput = new LengthSlider(this.inputsContainer, DEFAULT_MAXLENGTH);
-		this.hueInput = new HueSlider(this.inputsContainer);
+		this.slidersContainer = document.createElement("div");
+		this.slidersContainer.setAttribute("id", "sliderInputs");
+		this.inputsContainer.appendChild(this.slidersContainer);
+		this.lengthInput = new LengthSlider(this.slidersContainer, DEFAULT_MAXLENGTH);
+		this.hueInput = new HueSlider(this.slidersContainer);
 	}
 	getAngle(){ return this.angleInput.theta; }
 	getLength(){ return this.lengthInput.getValue(); }
