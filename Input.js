@@ -224,7 +224,7 @@ class SliderInput
 			this.inputSlider.value = this.max;
 		}
 	}
-	getValue(){ return this.value; }
+	getValue(){ return parseFloat(this.value); }
 }
 
 class LengthSlider extends SliderInput
