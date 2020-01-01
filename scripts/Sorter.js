@@ -158,6 +158,54 @@ class IntensitySorter extends Sorter
 	}
 }
 
+class LumaAscendingSorter extends Sorter
+{
+	constructor(pixelmap, x, y, theta, length, hueRange)
+	{
+		super(pixelmap, x, y, theta, length, hueRange);
+	}
+	pixelCompare(pixel1, pixel2)
+	{
+		return this.pixelmap.getLuma(pixel1) < this.pixelmap.getLuma(pixel2);
+	}
+}
+
+class LightnessAscendingSorter extends Sorter
+{
+	constructor(pixelmap, x, y, theta, length, hueRange)
+	{
+		super(pixelmap, x, y, theta, length, hueRange);
+	}
+	pixelCompare(pixel1, pixel2)
+	{
+		return this.pixelmap.getLightness(pixel1) < this.pixelmap.getLightness(pixel2);
+	}
+}
+
+class ValueAscendingSorter extends Sorter
+{
+	constructor(pixelmap, x, y, theta, length, hueRange)
+	{
+		super(pixelmap, x, y, theta, length, hueRange);
+	}
+	pixelCompare(pixel1, pixel2)
+	{
+		return this.pixelmap.getValue(pixel1) < this.pixelmap.getValue(pixel2);
+	}
+}
+
+class IntensityAscendingSorter extends Sorter
+{
+	constructor(pixelmap, x, y, theta, length, hueRange)
+	{
+		super(pixelmap, x, y, theta, length, hueRange);
+	}
+	pixelCompare(pixel1, pixel2)
+	{
+		return this.pixelmap.getIntensity(pixel1) < this.pixelmap.getIntensity(pixel2);
+	}
+}
+
 //This class encapsulates the creation of sorter objects.
 class SorterCreator
 {
@@ -177,9 +225,22 @@ class SorterCreator
 			case "Intensity":
 				this.sorterType = IntensitySorter;
 				break;
+			case "Luma (Ascending)":
+				this.sorterType = LumaAscendingSorter;
+				break;
+			case "Lightness (Ascending)":
+				this.sorterType = LightnessAscendingSorter;
+				break;
+			case "Value (Ascending)":
+				this.sorterType = ValueAscendingSorter;
+				break;
+			case "Intensity (Ascending)":
+				this.sorterType = IntensityAscendingSorter;
+				break;
 			default:
 				this.sorterType = Sorter;
 		}
+		console.log(this.sorterType);
 	}
 	create(startX, startY, theta, maxPixels, hueRange)
 	{

@@ -269,11 +269,12 @@ class Button
 	{
 		
 	}
-	constructor(container, text)
+	constructor(container, text, id)
 	{
 		this.container = container;
 		this.controller = controller;
 		this.button = document.createElement("button");
+		this.button.setAttribute("id", id);
 		this.text = document.createTextNode(text);
 		this.button.appendChild(this.text);
 		this.container.appendChild(this.button);
@@ -290,7 +291,7 @@ class ImageSave extends Button
 	}
 	constructor(container, controller)
 	{
-		super(container, "Save");
+		super(container, "Save", "saveimage");
 		this.controller = controller;
 	}
 }
@@ -303,7 +304,66 @@ class ImageRotate extends Button
 	}
 	constructor(container, controller)
 	{
-		super(container, "Rotate");
+		super(container, "Rotate", "rotateimage");
 		this.controller = controller;
+	}
+}
+
+class StopSorting extends Button
+{
+	action()
+	{
+		this.controller.clearSortsAndBusymap();
+	}
+	constructor(container, controller)
+	{
+		super(container, "Stop Sorting", "stopsort");
+		this.controller = controller;
+	}
+}
+
+class Dropdown
+{
+	action()
+	{
+		
+	}
+	constructor(container, id)
+	{
+		this.container = container;
+		this.controller = controller;
+		this.input = document.createElement("select");
+		this.input.setAttribute("id", id);
+		this.container.appendChild(this.input);
+		var selfReference = this;
+		this.input.addEventListener("change", function(){ selfReference.action(); });
+	}
+	addOption(text, value)
+	{
+		var option = document.createElement("option");
+		var textNode = document.createTextNode(text);
+		option.setAttribute("value", value);
+		option.appendChild(textNode);
+		this.input.appendChild(option);
+	}
+	getValue(){ return this.input.value; }
+}
+
+
+class SorterSelector extends Dropdown
+{
+	action()
+	{
+		this.controller.setSorterType(this.getValue());
+	}
+	constructor(container, controller)
+	{
+		super(container, "sorterselector");
+		this.controller = controller;
+		//This approach isn't particularly scaleable.
+		//It might be an area to consider improving.
+		var sorterTypes = ["Luma", "Lightness", "Value", "Intensity", "Luma (Ascending)", "Lightness (Ascending)", "Value (Ascending)", "Intensity (Ascending)"];
+		for(var type of sorterTypes)
+			this.addOption(type, type);
 	}
 }

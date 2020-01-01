@@ -22,7 +22,7 @@ class Controller
 		this.pointerInput = new PointerListener(this, this.imageInterface.getCanvas());
 		this.start();
 		//Create a toolbox
-		this.toolbox = new ConfigToolbox(this.container);
+		this.toolbox = new ConfigToolbox(this.container, this);
 	}
 	click()
 	{
@@ -130,5 +130,9 @@ class Controller
 		reader.addEventListener("load", function(){ selfReference.setImage(reader.result); }, false);
 		if(file)
 			reader.readAsDataURL(file);
+	}
+	setSorterType(type)
+	{
+		this.sorterCreator.setType(type);
 	}
 }
