@@ -240,7 +240,6 @@ class SorterCreator
 			default:
 				this.sorterType = Sorter;
 		}
-		console.log(this.sorterType);
 	}
 	create(startX, startY, theta, maxPixels, hueRange)
 	{

@@ -10,9 +10,25 @@ body
 	margin: 0px;
 }
 
+label
+{
+	display: block;
+}
+
 #main
 {
 	padding: 10px;
+	margin: 10px auto;
+	border-radius: 10px;
+}
+
+#imagetools
+{
+	
+}
+
+#preview
+{
 	margin: auto;
 }
 
@@ -46,10 +62,6 @@ body
 	grid-template-rows: auto auto auto auto;
 }
 
-#sliderInputs label
-{
-	display: block;
-}
 #sliderInputs input
 {
 	display: inline;
@@ -59,4 +71,9 @@ body
 {
 	display: grid;
 	grid-template-rows: auto auto;
+}
+
+#sortercontrols div
+{
+	
 }

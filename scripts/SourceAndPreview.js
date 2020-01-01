@@ -75,7 +75,6 @@ class SourceLite extends Source
 			var image = selfReference.image;
 			var context = selfReference.context;
 			var megapixels = selfReference.calculateMegapixels(image);
-			console.log(megapixels);
 			var scalar = 1;
 			if(megapixels > LITE_MAX_MEGAPIXELS)
 			{

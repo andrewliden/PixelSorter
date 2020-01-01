@@ -328,13 +328,19 @@ class Dropdown
 	{
 		
 	}
-	constructor(container, id)
+	constructor(container, id, labeltext)
 	{
 		this.container = container;
 		this.controller = controller;
+		this.subcontainer = document.createElement("div");
+		this.container.appendChild(this.subcontainer);
+		this.label = document.createElement("label");
+		this.labeltextNode = document.createTextNode(labeltext);
+		this.label.appendChild(this.labeltextNode);
+		this.subcontainer.appendChild(this.label);
 		this.input = document.createElement("select");
 		this.input.setAttribute("id", id);
-		this.container.appendChild(this.input);
+		this.subcontainer.appendChild(this.input);
 		var selfReference = this;
 		this.input.addEventListener("change", function(){ selfReference.action(); });
 	}
@@ -358,7 +364,7 @@ class SorterSelector extends Dropdown
 	}
 	constructor(container, controller)
 	{
-		super(container, "sorterselector");
+		super(container, "sorterselector", "Sorter Type");
 		this.controller = controller;
 		//This approach isn't particularly scaleable.
 		//It might be an area to consider improving.
