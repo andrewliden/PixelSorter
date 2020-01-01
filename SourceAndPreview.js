@@ -3,6 +3,7 @@ const HEIGHT_PADDING = 200;
 const MIN_WIDTH = 100;
 const WIDTH_PADDING = 50;
 const DEFAULT_IMG = "default.jpg";
+const LITE_MAX_MEGAPIXELS = 5;
 
 //This class contains the actual image and ways for the user to interact with it.
 class Source
@@ -49,7 +50,46 @@ class Source
 		this.canvas.width = this.canvas.height;
 		this.canvas.height = tempWidth;
 	}
+}
 
+//This is a version of the source image that restricts photo sizes,
+//In order to improve performance.
+class SourceLite extends Source
+{
+	constructor(src)
+	{
+		super(src);
+	}
+	calculateMegapixels(image){ return image.width * image.height / 1000000; }
+	setImage(src)
+	{
+		//Create an image, a canvas, and a container for some image data.
+		this.image = new Image();
+		this.image.src = src;
+		//Create a reference to this object for the image load event listener
+		var selfReference = this;
+		//Create a function for the image load event listener to use.
+		this.image.onload = function()
+		{
+			var canvas = selfReference.canvas;
+			var image = selfReference.image;
+			var context = selfReference.context;
+			var megapixels = selfReference.calculateMegapixels(image);
+			console.log(megapixels);
+			var scalar = 1;
+			if(megapixels > LITE_MAX_MEGAPIXELS)
+			{
+				//If the number exceeds the megapixel limit, modify the scalar.
+				var scalar = Math.sqrt(LITE_MAX_MEGAPIXELS / megapixels);
+			}
+			var width = Math.floor(image.width * scalar);
+			var height = Math.floor(image.height * scalar);
+			canvas.width = width;
+			canvas.height = height;
+			context.drawImage(image, 0, 0, width, height);
+			selfReference.createPixelmap();
+		}
+	}
 }
 
 class Preview
@@ -69,8 +109,8 @@ class Preview
 		var targetHeight = Math.max(window.innerHeight - HEIGHT_PADDING, MIN_HEIGHT);
 		var targetWidth = Math.max(window.innerWidth - WIDTH_PADDING, MIN_WIDTH);
 		//Figure out how much you'd need to scale if you were limited by height or width.
-		var heightScale = targetHeight / this.source.image.height;
-		var widthScale = targetWidth / this.source.image.width;
+		var heightScale = targetHeight / this.source.canvas.height;
+		var widthScale = targetWidth / this.source.canvas.width;
 		//Take the smaller of the two possible scaling factors.
 		this.scale = Math.min(heightScale, widthScale);
 	}
@@ -114,56 +154,5 @@ class Cursor
 		this.context.strokeStyle = "black";
 		this.context.lineWidth = 2;
 		this.context.stroke();
-	}
-}
-
-//Simplifies client interaction with the source & preview
-// so that the two behave as one object.
-// Also adds a cursor.
-class SourcePreviewComposite
-{
-	constructor(container)
-	{
-		this.container = container;
-		this.source = new Source(DEFAULT_IMG);
-		//Create a div to put the preview in.
-		this.previewContainer = document.createElement("div");
-		this.previewContainer.setAttribute("id", "preview");
-		this.container.appendChild(this.previewContainer);
-		this.preview = new Preview(this.source, this.container);
-		this.cursor = new Cursor(this.preview.context);
-	}
-	draw()
-	{
-		this.source.draw();
-		this.preview.draw();
-	}
-	drawCursor(x, y, theta, length)
-	{
-		this.cursor.draw(x, y, theta, length);
-	}
-	
-	getPixelmap(){ return this.source.pixelmap; }
-	getCanvas(){ return this.preview.canvas; }
-	getScale(){ return this.preview.scale; }
-	getWidth(){ return this.source.canvas.width; }
-	getHeight(){ return this.source.canvas.height; }
-	setImage(src)
-	{ 
-		this.source.setImage(src); 
-	}
-	saveImage()
-	{
-		this.draw();
-		var image = this.source.canvas.toDataURL();
-		var imageDocument = window.open();
-		imageDocument.document.title = "Pixelsorted image";
-		var imageTag = imageDocument.document.createElement("img");
-		imageTag.setAttribute("src", image);
-		imageDocument.document.body.appendChild(imageTag);
-	}
-	rotate()
-	{
-		this.source.rotate();
 	}
 }

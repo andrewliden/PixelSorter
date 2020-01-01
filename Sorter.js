@@ -183,7 +183,7 @@ class SorterCreator
 	}
 	create(startX, startY, theta, maxPixels, hueRange)
 	{
-		var pixelmap = this.controller.sourceAndPreview.getPixelmap();
+		var pixelmap = this.controller.getPixelmap();
 		var newSorter = new this.sorterType(pixelmap, startX, startY, theta, maxPixels, hueRange);
 		this.controller.sorters.push(newSorter);
 	}

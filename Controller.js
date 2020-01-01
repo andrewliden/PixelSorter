@@ -11,12 +11,12 @@ class Controller
 	{
 		//Put this in a container (some html element, typically a div)
 		this.container = container;
-		this.sourceAndPreview = new SourcePreviewComposite(this.container);
+		this.imageInterface = new ImageInterface(this.container);
 		//Create a list of sorters.
 		this.sorters = [];
 		this.sorterCreator = new SorterCreator(this);
 		//Create an input listener
-		this.pointerInput = new PointerListener(this, this.sourceAndPreview.getCanvas());
+		this.pointerInput = new PointerListener(this, this.imageInterface.getCanvas());
 		this.start();
 		//Create a toolbox
 		this.toolbox = new ConfigToolbox(this.container);
@@ -26,7 +26,7 @@ class Controller
 		var theta = this.toolbox.getAngle();
 		var length = this.toolbox.getLength();
 		var hueRange = this.toolbox.getHueRange();
-		var scale = 1 / this.sourceAndPreview.getScale();
+		var scale = 1 / this.imageInterface.getScale();
 		var scaledDx = this.pointerInput.dx * scale;
 		var scaledDy = this.pointerInput.dy * scale;
 		//If the pointer wasn't moving, just add 1 sorter.
@@ -85,7 +85,7 @@ class Controller
 	//This function clamps the max distance for the sorter length slider to the diagonal length of the image.
 	applyMaxLength()
 	{
-		var maxDist = Math.floor( Math.sqrt( this.sourceAndPreview.getWidth() ** 2 + this.sourceAndPreview.getHeight() ** 2 ) );
+		var maxDist = Math.floor( Math.sqrt( this.imageInterface.getWidth() ** 2 + this.imageInterface.getHeight() ** 2 ) );
 		this.toolbox.setMaxLength(maxDist);
 	}
 	refresh()
@@ -94,9 +94,9 @@ class Controller
 		var theta = this.toolbox.getAngle();
 		var length = this.toolbox.getLength();
 		this.doSorts();
-		this.sourceAndPreview.draw();
-		var cursorSize = length * this.sourceAndPreview.getScale();
-		this.sourceAndPreview.drawCursor(this.pointerInput.x, this.pointerInput.y, theta, cursorSize);
+		this.imageInterface.draw();
+		var cursorSize = length * this.imageInterface.getScale();
+		this.imageInterface.drawCursor(this.pointerInput.x, this.pointerInput.y, theta, cursorSize);
 	}
 	stop()
 	{
@@ -105,16 +105,20 @@ class Controller
 	setImage(src)
 	{
 		this.clearSorts();
-		this.sourceAndPreview.setImage(src);
+		this.imageInterface.setImage(src);
 	}
 	rotate()
 	{
 		this.clearSorts();
-		this.sourceAndPreview.rotate();
+		this.imageInterface.rotate();
 	}
 	saveImage()
 	{
-		this.sourceAndPreview.saveImage();
+		this.imageInterface.saveImage();
+	}
+	getPixelmap()
+	{
+		return this.imageInterface.getPixelmap();
 	}
 	
 }

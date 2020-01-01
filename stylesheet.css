@@ -11,14 +11,14 @@ html
 
 #inputs
 {
-	
+	display: grid;
+	grid-columns: 110px auto auto;
 }
 
 #angleinput
 {
 	display: grid;
-	grid-rows: auto auto;
-	width: 110px;
+	grid-rows: auto auto auto;
 	padding: 10px;
 }
 
