@@ -11,6 +11,9 @@ class Controller
 	{
 		//Put this in a container (some html element, typically a div)
 		this.container = container;
+		//Create the image toolbox.
+		this.imagetools = new ImageToolbox(this.container, this);
+		//Create the image interface.
 		this.imageInterface = new ImageInterface(this.container);
 		//Create a list of sorters.
 		this.sorters = [];
@@ -120,5 +123,12 @@ class Controller
 	{
 		return this.imageInterface.getPixelmap();
 	}
-	
+	loadImage(file)
+	{
+		var reader = new FileReader();
+		var selfReference = this;
+		reader.addEventListener("load", function(){ selfReference.setImage(reader.result); }, false);
+		if(file)
+			reader.readAsDataURL(file);
+	}
 }

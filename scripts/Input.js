@@ -245,24 +245,65 @@ class HueSlider extends SliderInput
 
 class ImageUpload
 {
-	constructor(container)
+	uploadFile()
+	{
+		var file = this.input.files[0];
+		this.controller.loadImage(file);
+	}
+	constructor(container, controller)
+	{
+		this.container = container;
+		this.controller = controller;
+		this.input = document.createElement("input");
+		this.input.setAttribute("type", "file");
+		this.container.appendChild(this.input);
+		var selfReference = this;
+		this.input.addEventListener("input", function(){ selfReference.uploadFile(); });
+	}
+	
+}
+
+class Button
+{
+	action()
 	{
 		
 	}
-}
-
-class ImageSave
-{
-	constructor(container)
+	constructor(container, text)
 	{
-		
+		this.container = container;
+		this.controller = controller;
+		this.button = document.createElement("button");
+		this.text = document.createTextNode(text);
+		this.button.appendChild(this.text);
+		this.container.appendChild(this.button);
+		var selfReference = this;
+		this.button.addEventListener("click", function(){ selfReference.action(); });
 	}
 }
 
-class ImageRotate
+class ImageSave extends Button
 {
-	constructor(container)
+	action()
 	{
-		
+		this.controller.saveImage();
+	}
+	constructor(container, controller)
+	{
+		super(container, "Save");
+		this.controller = controller;
+	}
+}
+
+class ImageRotate extends Button
+{
+	action()
+	{
+		this.controller.rotate();
+	}
+	constructor(container, controller)
+	{
+		super(container, "Rotate");
+		this.controller = controller;
 	}
 }

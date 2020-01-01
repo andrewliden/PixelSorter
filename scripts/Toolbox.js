@@ -32,8 +32,14 @@ class ConfigToolbox extends Toolbox
 
 class ImageToolbox extends Toolbox
 {
-	constructor(container)
+	constructor(container, controller)
 	{
 		super(container, "imagetools");
+		this.controller = controller;
+		this.loadimage = new ImageUpload(this.container, this.controller);
+		this.rotateimage = new ImageRotate(this.container, this.controller);
+		this.saveimage = new ImageSave(this.container, this.controller);
+		
+		
 	}
 }
