@@ -2,7 +2,7 @@ const MIN_HEIGHT = 100;
 const HEIGHT_PADDING = 200;
 const MIN_WIDTH = 100;
 const WIDTH_PADDING = 50;
-const DEFAULT_IMG = "default.jpg";
+const DEFAULT_IMG = "media/default.jpg";
 const LITE_MAX_MEGAPIXELS = 5;
 
 //This class contains the actual image and ways for the user to interact with it.

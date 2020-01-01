@@ -97,7 +97,7 @@ class Sorter
 	//Compares two pixel objects.
 	pixelCompare(pixel1, pixel2)
 	{
-		return this.pixelmap.getLuma(pixel1) > this.pixelmap.getLuma(pixel2);
+		return this.pixelmap.getLuma(pixel1) < this.pixelmap.getLuma(pixel2);
 	}
 	doSort()
 	{
@@ -130,7 +130,7 @@ class LightnessSorter extends Sorter
 	}
 	pixelCompare(pixel1, pixel2)
 	{
-		return this.pixelmap.getLightness(pixel1) > this.pixelmap.getLightness(pixel2);
+		return this.pixelmap.getLightness(pixel1) < this.pixelmap.getLightness(pixel2);
 	}
 }
 
@@ -142,7 +142,7 @@ class ValueSorter extends Sorter
 	}
 	pixelCompare(pixel1, pixel2)
 	{
-		return this.pixelmap.getValue(pixel1) > this.pixelmap.getValue(pixel2);
+		return this.pixelmap.getValue(pixel1) < this.pixelmap.getValue(pixel2);
 	}
 }
 
@@ -154,55 +154,55 @@ class IntensitySorter extends Sorter
 	}
 	pixelCompare(pixel1, pixel2)
 	{
-		return this.pixelmap.getIntensity(pixel1) > this.pixelmap.getIntensity(pixel2);
-	}
-}
-
-class LumaAscendingSorter extends Sorter
-{
-	constructor(pixelmap, x, y, theta, length, hueRange)
-	{
-		super(pixelmap, x, y, theta, length, hueRange);
-	}
-	pixelCompare(pixel1, pixel2)
-	{
-		return this.pixelmap.getLuma(pixel1) < this.pixelmap.getLuma(pixel2);
-	}
-}
-
-class LightnessAscendingSorter extends Sorter
-{
-	constructor(pixelmap, x, y, theta, length, hueRange)
-	{
-		super(pixelmap, x, y, theta, length, hueRange);
-	}
-	pixelCompare(pixel1, pixel2)
-	{
-		return this.pixelmap.getLightness(pixel1) < this.pixelmap.getLightness(pixel2);
-	}
-}
-
-class ValueAscendingSorter extends Sorter
-{
-	constructor(pixelmap, x, y, theta, length, hueRange)
-	{
-		super(pixelmap, x, y, theta, length, hueRange);
-	}
-	pixelCompare(pixel1, pixel2)
-	{
-		return this.pixelmap.getValue(pixel1) < this.pixelmap.getValue(pixel2);
-	}
-}
-
-class IntensityAscendingSorter extends Sorter
-{
-	constructor(pixelmap, x, y, theta, length, hueRange)
-	{
-		super(pixelmap, x, y, theta, length, hueRange);
-	}
-	pixelCompare(pixel1, pixel2)
-	{
 		return this.pixelmap.getIntensity(pixel1) < this.pixelmap.getIntensity(pixel2);
+	}
+}
+
+class LumaDescendingSorter extends Sorter
+{
+	constructor(pixelmap, x, y, theta, length, hueRange)
+	{
+		super(pixelmap, x, y, theta, length, hueRange);
+	}
+	pixelCompare(pixel1, pixel2)
+	{
+		return this.pixelmap.getLuma(pixel1) > this.pixelmap.getLuma(pixel2);
+	}
+}
+
+class LightnessDescendingSorter extends Sorter
+{
+	constructor(pixelmap, x, y, theta, length, hueRange)
+	{
+		super(pixelmap, x, y, theta, length, hueRange);
+	}
+	pixelCompare(pixel1, pixel2)
+	{
+		return this.pixelmap.getLightness(pixel1) > this.pixelmap.getLightness(pixel2);
+	}
+}
+
+class ValueDescendingSorter extends Sorter
+{
+	constructor(pixelmap, x, y, theta, length, hueRange)
+	{
+		super(pixelmap, x, y, theta, length, hueRange);
+	}
+	pixelCompare(pixel1, pixel2)
+	{
+		return this.pixelmap.getValue(pixel1) > this.pixelmap.getValue(pixel2);
+	}
+}
+
+class IntensityDescendingSorter extends Sorter
+{
+	constructor(pixelmap, x, y, theta, length, hueRange)
+	{
+		super(pixelmap, x, y, theta, length, hueRange);
+	}
+	pixelCompare(pixel1, pixel2)
+	{
+		return this.pixelmap.getIntensity(pixel1) > this.pixelmap.getIntensity(pixel2);
 	}
 }
 
@@ -225,17 +225,17 @@ class SorterCreator
 			case "Intensity":
 				this.sorterType = IntensitySorter;
 				break;
-			case "Luma (Ascending)":
-				this.sorterType = LumaAscendingSorter;
+			case "Luma (Descending)":
+				this.sorterType = LumaDescendingSorter;
 				break;
-			case "Lightness (Ascending)":
-				this.sorterType = LightnessAscendingSorter;
+			case "Lightness (Descending)":
+				this.sorterType = LightnessDescendingSorter;
 				break;
-			case "Value (Ascending)":
-				this.sorterType = ValueAscendingSorter;
+			case "Value (Descending)":
+				this.sorterType = ValueDescendingSorter;
 				break;
-			case "Intensity (Ascending)":
-				this.sorterType = IntensityAscendingSorter;
+			case "Intensity (Descending)":
+				this.sorterType = IntensityDescendingSorter;
 				break;
 			default:
 				this.sorterType = Sorter;
