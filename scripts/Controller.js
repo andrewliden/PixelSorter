@@ -2,7 +2,7 @@
 //I'm sure someone will ask, "Why is the frame rate so low?"
 //It's because when it's a bit slower, it's easier sometimes to stop sorting.
 //If you really just want it to be 60, just change it...
-const FRAME_RATE = 15;
+const FRAME_RATE = 30;
 const REFRESH_RATE = 100 * 1/ FRAME_RATE;
 
 class Controller

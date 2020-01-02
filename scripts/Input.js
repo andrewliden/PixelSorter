@@ -1,3 +1,6 @@
+const ANGLEINPUT_LINE_COLOR = "#85837F";
+const ANGLEINPUT_LINE_WIDTH = 3;
+
 //Encapsulates touch & mouse behaviors into one object
 //Calls "click" on the owner when a pointer input happens.
 //keeps track of important stats such as x & y values and movement values.
@@ -132,7 +135,7 @@ class AngleInput
 		this.container = container;
 		//Create HTML elements.
 		this.label = document.createElement("label");
-		this.labeltextNode = document.createTextNode("Angle (deg)");
+		this.labeltextNode = document.createTextNode("Angle");
 		this.inputBox = document.createElement("input");
 		this.inputBox.setAttribute("type", "number");
 		this.inputCanvas = document.createElement("canvas");
@@ -149,6 +152,8 @@ class AngleInput
 		this.context = this.inputCanvas.getContext("2d");
 		this.inputCanvas.width = 100;
 		this.inputCanvas.height = 100;
+		this.context.strokeStyle = ANGLEINPUT_LINE_COLOR;
+		this.context.lineWidth = ANGLEINPUT_LINE_WIDTH;
 		this.theta = Math.PI / 2;
 		this.pointerListener = new PointerListener(this, this.inputCanvas);
 		this.createInputBoxListener();
