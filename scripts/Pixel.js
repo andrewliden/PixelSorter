@@ -130,4 +130,5 @@ class PixelMap
 		this.data = replacement.data;
 		this.busy = new Int8Array(this.data.length / 4);
 	}
+	getChangelist(){return this.changed; }
 }
