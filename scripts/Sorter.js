@@ -116,7 +116,6 @@ class Sorter
 	}
 	destroy()
 	{
-		console.log(this);
 		//Free up all the pixels that were reserved by this sorter.
 		for(var pixel of this.pixelList)
 			this.pixelmap.setNotBusy(pixel);
