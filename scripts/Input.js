@@ -1,4 +1,4 @@
-const ANGLEINPUT_LINE_COLOR = "#85837F";
+const ANGLEINPUT_LINE_COLOR = "white";
 const ANGLEINPUT_LINE_WIDTH = 3;
 
 //Encapsulates touch & mouse behaviors into one object
@@ -261,7 +261,13 @@ class ImageUpload
 		this.controller = controller;
 		this.input = document.createElement("input");
 		this.input.setAttribute("type", "file");
+		this.input.setAttribute("id", "file");
+		this.label = document.createElement("label");
+		this.labeltext = document.createTextNode("Load Image");
+		this.label.setAttribute("for", "file");
+		this.label.appendChild(this.labeltext);
 		this.container.appendChild(this.input);
+		this.container.appendChild(this.label);
 		var selfReference = this;
 		this.input.addEventListener("input", function(){ selfReference.uploadFile(); });
 	}

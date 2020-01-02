@@ -15,30 +15,63 @@ label
 {
 	font-size: 18pt;
 	font-family: Helvetica, Arial, sans-serif;
-	color: #565759;
+	color: white;
 	display: block;
 }
-
+/*Using a label to ease styling an input, as per the suggestion*/
+/*of the following blog post: https://tympanus.net/codrops/2015/09/15/styling-customizing-file-inputs-smart-way/*/
 [type="file"]
-{
-	background-color: #1E1400;
-	border-radius: 5px;
-}
-
-[type="file"] + label
 {
 	display: none;
 }
 
-input[type="number"]
+input[type="number"], button, [type="file"] + label, select
 {
 	font-family: Helvetica, Arial, sans-serif;
-	color: #85837F;
+	color: white;
 	font-size: 24pt;
-	background-color: #1E1400;
+	background-color: rgb(74, 149, 0);
 	padding: 5px;
 	border-radius: 5px;
 	border: 0px;
+}
+
+button, [type="file"] + label
+{
+	display: block;
+	color: transparent;
+	background-repeat: no-repeat;
+	background-position: center;
+}
+
+button:hover, [type="file"] + label:hover, input:hover
+{
+	background-color: rgb(106, 213, 0);
+}
+
+button:active, [type="file"] + label:active
+{
+	background-color: red;
+}
+
+[type="file"] + label
+{
+	background-image: url("../media/load.png");
+}
+
+#saveimage
+{
+	background-image: url("../media/save.png");
+}
+
+#rotateimage
+{
+	background-image: url("../media/rotate.png");
+}
+
+#stopsort
+{
+	background-image: url("../media/stop_sorting.png");
 }
 
 input[type="range"]
@@ -50,58 +83,49 @@ input[type="range"]
 	border: 0px;
 }
 
-button
-{
-	font-family: Helvetica, Arial, sans-serif;
-	font-size: 18pt;
-	display: block;
-	background-color: #1E1400;
-	color: #85837F;
-	border: 0px;
-	border-radius: 5px;
-}
-
 select
 {
-	font-family: Helvetica, Arial, sans-serif;
-	font-size: 18pt;
-	color: #85837F;
-	background-color: #1E1400;
-	border-radius: 5px;
 	width: 100%;
 	height: 60%;
-	border: 0px;
+}
+
+#main, #imagetools, #preview, #inputs, #angleinput, #sliderInputs, #sortercontrols
+{
+	display: grid;
+	padding: 5px;
+	border-radius: 5px;
 }
 
 #main
 {
-	display: grid;
+	background-color: rgb(28, 28, 36);
 	grid-template-rows: auto auto auto;
 	grid-row-gap: 2px;
-	padding: 2px;
-	margin: 2px;
-	border-radius: 5px;
-	background-color: #121A2C;
+	margin: 2px;	
+}
+
+#imagetools, #inputs, #preview
+{
+	background-color: rgb(55,55,72);
+}
+
+#angleinput, #sliderInputs, #sortercontrols
+{
+	background-color: rgb(65,65,84);
 }
 
 #imagetools
 {
-	display: grid;
 	height: 50px;
 	grid-template-columns: auto auto auto;
 	grid-column-gap: 5px;
-	background-color: #000614;
-	padding: 5px;
-	border-radius: 5px;
 }
 
 #preview
 {
 	margin: auto;
-	padding: 5px;
-	border-radius: 5px;
-	background-color: #000614;
 }
+
 #preview canvas
 {
 	display: block;
@@ -110,24 +134,15 @@ select
 
 #inputs
 {
-	
-	display: grid;
 	grid-template-columns: 110px auto auto;
-	grid-column-gap: 2px;
-	background-color: #020817;
-	border-radius: 5px;
-	padding: 5px;
+	grid-column-gap: 5px;
 }
 
 #angleinput
 {
 	grid-column-start: 1;
 	grid-column-end: 2;
-	display: grid;
 	grid-template-rows: auto auto auto;
-	background-color: #000614;
-	border-radius: 5px;
-	padding: 5px;
 }
 
 #angleinput input
@@ -139,16 +154,12 @@ select
 {
 	grid-column-start: 2;
 	grid-column-end: 3;
-	display: grid;
 	grid-template-rows: auto auto auto auto;
-	background-color: #000614;
-	border-radius: 5px;
-	padding: 5px;
 }
 
 #sliderInputs input[type="range"]
 {
-	width: 80%;
+	width: 75%;
 }
 #sliderInputs input[type="number"]
 {
@@ -157,9 +168,5 @@ select
 
 #sortercontrols
 {
-	display: grid;
 	grid-template-rows: auto auto;
-	background-color: #000614;
-	border-radius: 5px;
-	padding: 5px;
 }
