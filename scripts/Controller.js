@@ -7,6 +7,10 @@ const REFRESH_RATE = 100 * 1/ FRAME_RATE;
 
 class Controller
 {
+	createImageInterface()
+	{
+		this.imageInterface = new ImageInterface(this.container);
+	}
 	start()
 	{
 		var selfReference = this;
@@ -19,7 +23,7 @@ class Controller
 		//Create the image toolbox.
 		this.imagetools = new ImageToolbox(this.container, this);
 		//Create the image interface.
-		this.imageInterface = new ImageInterface(this.container);
+		this.createImageInterface();
 		//Create a list of sorters.
 		this.sorters = [];
 		this.sorterCreator = new SorterCreator(this);
@@ -139,5 +143,17 @@ class Controller
 	setSorterType(type)
 	{
 		this.sorterCreator.setType(type);
+	}
+}
+
+class LiteController extends Controller
+{
+	createImageInterface()
+	{
+		this.imageInterface = new LiteImageInterface(this.container);
+	}
+	constructor(container)
+	{
+		super(container);
 	}
 }

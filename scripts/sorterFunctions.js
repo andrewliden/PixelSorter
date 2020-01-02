@@ -6,6 +6,12 @@ function init()
 	controller = new Controller(mainLayer);
 }
 
+function initLite()
+{
+	var mainLayer = document.getElementById("main");
+	controller = new LiteController(mainLayer);
+}
+
 function circleSort(r)
 {
 	var x = controller.pointerInput.x;
