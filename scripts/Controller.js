@@ -46,7 +46,8 @@ class Controller
 		{
 			var x = scale * this.pointerInput.x
 			var y = scale * this.pointerInput.y
-			this.sorterCreator.create(length, x, y, theta);
+			console.log(x + ", " + y);
+			this.sorterCreator.create(x, y, theta, length, hueRange);
 		}
 		else
 		{
