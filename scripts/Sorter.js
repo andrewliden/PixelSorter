@@ -44,11 +44,11 @@ class Sorter
 	// Only valid pixels will be added to the list.
 	addPixel(x, y)
 	{
-		//Break if the pixel is outside the image.
+		//Don't add the pixel if it's outside the image.
 		var width = this.pixelmap.imagedata.width;
 		var height = this.pixelmap.imagedata.height;
 		if(x < 0 | x >= width | y < 0 | y >= height)
-			throw "break";
+			return;
 		var pixel = this.pixelmap.getPixel(x, y);
 		//Break if the hue is outside the desired range.
 		if(!this.hueInRange(pixel))

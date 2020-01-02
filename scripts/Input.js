@@ -8,8 +8,9 @@ class PointerListener
 {
 	mouseInput(event)
 	{
-		this.x = event.offsetX;
-		this.y = event.offsetY;
+		var boundingRect = this.inputCanvas.getBoundingClientRect();
+		this.x = event.pageX - boundingRect.left;
+		this.y = event.pageY - boundingRect.top;
 		this.dx = event.movementX;
 		this.dy = event.movementY;
 		if(event.buttons == 1)
@@ -25,7 +26,7 @@ class PointerListener
 		if(event.targetTouches.length == 1)
 		{
 			var touch = event.targetTouches[0];
-			var boundingRect = event.target.getBoundingClientRect();
+			var boundingRect = this.inputCanvas.getBoundingClientRect();
 			var offsetX = touch.pageX - boundingRect.left;
 			var offsetY = touch.pageY - boundingRect.top;
 			this.dx = 0;
@@ -52,12 +53,14 @@ class PointerListener
 		}
 		
 	}
-	constructor(owner, htmlElement)
+	constructor(owner, inputTarget, inputCanvas)
 	{
 		//owner:		some javascript object.
-		//htmlElement:	some html element to attach the event listener to.
+		//inputTarget:	The target of the event listener
+		//inputCanvas:	The canvas we're working in.
 		this.owner = owner;
-		this.htmlElement = htmlElement;
+		this.inputTarget = inputTarget;
+		this.inputCanvas = inputCanvas;
 		//Create a variable that refers to this object
 		//to make sure the event listener functions use 
 		var selfReference = this;
@@ -75,10 +78,10 @@ class PointerListener
 			selfReference.touchStart(event);
 			event.preventDefault();
 		}
-		htmlElement.addEventListener("mousedown", this.mouseListenFunction);
-		htmlElement.addEventListener("mousemove", this.mouseListenFunction);
-		htmlElement.addEventListener("touchstart", this.touchStartListenFunction);
-		htmlElement.addEventListener("touchmove", this.touchListenFunction);
+		inputTarget.addEventListener("mousedown", this.mouseListenFunction);
+		inputTarget.addEventListener("mousemove", this.mouseListenFunction);
+		inputTarget.addEventListener("touchstart", this.touchStartListenFunction);
+		inputTarget.addEventListener("touchmove", this.touchListenFunction);
 		this.x = 0;
 		this.y = 0;
 		this.dx = 0;
@@ -155,7 +158,7 @@ class AngleInput
 		this.context.strokeStyle = ANGLEINPUT_LINE_COLOR;
 		this.context.lineWidth = ANGLEINPUT_LINE_WIDTH;
 		this.theta = Math.PI / 2;
-		this.pointerListener = new PointerListener(this, this.inputCanvas);
+		this.pointerListener = new PointerListener(this, this.inputCanvas, this.inputCanvas);
 		this.createInputBoxListener();
 		this.draw();
 		this.updateInputBox();

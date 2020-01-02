@@ -76,11 +76,51 @@ button:active, [type="file"] + label:active
 
 input[type="range"]
 {
-	height: 10px;
-	background: #1E1400;
-	border-radius: 5px;
-	color: #85837F;
-	border: 0px;
+	-webkit-appearance: none;
+	appearance: none;
+	height: 15px;
+	background: white;
+	outline: none;
+}
+
+input[type="range"]::-webkit-slider-thumb
+{
+	-webkit-appearance: none;
+	appearance: none;
+	width: 25px;
+	height: 25px;
+	background: rgb(74, 149, 0);
+	border-radius: 50%;
+	cursor: pointer;
+}
+
+input[type="range"]::-moz-range-thumb
+{
+	width: 25px;
+	height: 25px;
+	background: rgb(74, 149, 0);
+	border-radius: 50%;
+	cursor: pointer;
+}
+
+input[type="range"]::-webkit-slider-thumb:hover
+{
+	background: rgb(106, 213, 0);
+}
+
+input[type="range"]::-moz-range-thumb:hover
+{
+	background: rgb(106, 213, 0);
+}
+
+input[type="range"]::-webkit-slider-thumb:active
+{
+	background: red;
+}
+
+input[type="range"]::-moz-range-thumb:active
+{
+	background: red;
 }
 
 select
@@ -89,10 +129,16 @@ select
 	height: 60%;
 }
 
-#main, #imagetools, #preview, #inputs, #angleinput, #sliderInputs, #sortercontrols
+#main, #imagetools, #inputs, #angleinput, #sliderInputs, #sortercontrols
 {
 	display: grid;
 	padding: 5px;
+	border-radius: 5px;
+}
+
+#preview
+{
+	padding: 15px;
 	border-radius: 5px;
 }
 
@@ -107,6 +153,11 @@ select
 #imagetools, #inputs, #preview
 {
 	background-color: rgb(55,55,72);
+}
+
+#imagetools, #inputs
+{
+	min-width: 500px;
 }
 
 #angleinput, #sliderInputs, #sortercontrols
@@ -157,13 +208,22 @@ select
 	grid-template-rows: auto auto auto auto;
 }
 
+#sliderInputs div
+{
+	display: grid;
+	grid-template-columns: auto 100px;
+	grid-column-gap: 5px;
+}
+
 #sliderInputs input[type="range"]
 {
-	width: 75%;
+	grid-column-start: 1;
+	grid-column-end: 2;
 }
 #sliderInputs input[type="number"]
 {
-	width: 15%;
+	grid-column-start: 2;
+	grid-column-end: 3;
 }
 
 #sortercontrols

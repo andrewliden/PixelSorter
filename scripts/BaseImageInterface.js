@@ -24,6 +24,7 @@ class BaseImageInterface
 	
 	getPixelmap(){ return this.source.pixelmap; }
 	getCanvas(){ return this.preview.canvas; }
+	getPreviewContainer(){return this.preview.container; }
 	getScale(){ return this.preview.scale; }
 	getWidth(){ return this.source.canvas.width; }
 	getHeight(){ return this.source.canvas.height; }

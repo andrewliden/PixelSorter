@@ -28,7 +28,7 @@ class Controller
 		this.sorters = [];
 		this.sorterCreator = new SorterCreator(this);
 		//Create an input listener
-		this.pointerInput = new PointerListener(this, this.imageInterface.getCanvas());
+		this.pointerInput = new PointerListener(this, this.imageInterface.getPreviewContainer(), this.imageInterface.getCanvas());
 		this.start();
 		//Create a toolbox
 		this.toolbox = new ConfigToolbox(this.container, this);
