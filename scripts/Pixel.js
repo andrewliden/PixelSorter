@@ -107,9 +107,9 @@ class PixelMap
 		var oldHeight = this.context.canvas.height;
 		var replacement = this.context.createImageData(oldHeight, oldWidth);
 		//For each pixel, copy the image data.
-		for(var y = 0; y < this.context.canvas.height; y++)
+		for(var y = 0; y <= this.context.canvas.height; y++)
 		{
-			for(var x = 0; x < this.context.canvas.width; x++)
+			for(var x = 0; x <= this.context.canvas.width; x++)
 			{
 				//Get the index of the pixel you want to copy.
 				var originalIndex = this.getPixel(x, y);
