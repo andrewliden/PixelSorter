@@ -1,3 +1,6 @@
+//Problem with this design:
+// The "rotate" method changes the index of every pixel.
+
 const HISTORY_LENGTH = 5;
 
 class AbstractHistoryNode
