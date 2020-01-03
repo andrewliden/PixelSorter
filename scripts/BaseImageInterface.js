@@ -46,4 +46,12 @@ class BaseImageInterface
 	{
 		this.source.rotate();
 	}
+	saveUndoState()
+	{
+		this.source.pixelmap.recordUndoState();
+	}
+	undo()
+	{
+		this.source.pixelmap.undo();
+	}
 }

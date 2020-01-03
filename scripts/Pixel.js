@@ -4,14 +4,23 @@ const SQRT_3 = Math.sqrt(3);
 //It gets a context, then creates an image data object.
 class PixelMap
 {
-	updateImageData()
+	initializeUndoHistory()
 	{
-		this.imagedata = this.context.getImageData(0, 0, this.context.canvas.width, this.context.canvas.height);
-		this.data = this.imagedata.data;
+		this.undoHistory = new HistoryStack(this);
+	}
+	initializeTrackingArrays()
+	{
 		//Maintain a list of busy pixels.
 		//This list only needs to be 1/4 the size of the image data,
 		//since it's only storing a boolean value, not RGBA data.
 		this.busy = new Int8Array(this.data.length / 4);
+	}
+	updateImageData()
+	{
+		this.imagedata = this.context.getImageData(0, 0, this.context.canvas.width, this.context.canvas.height);
+		this.data = this.imagedata.data;
+		this.initializeTrackingArrays();
+		this.initializeUndoHistory();
 	}
 	constructor(context)
 	{
@@ -103,13 +112,15 @@ class PixelMap
 	}
 	rotate()
 	{
+		//Rotate the history data.
+		this.undoHistory.rotate();
 		var oldWidth = this.context.canvas.width;
 		var oldHeight = this.context.canvas.height;
 		var replacement = this.context.createImageData(oldHeight, oldWidth);
 		//For each pixel, copy the image data.
-		for(var y = 0; y <= this.context.canvas.height; y++)
+		for(var y = 0; y <= oldHeight; y++)
 		{
-			for(var x = 0; x <= this.context.canvas.width; x++)
+			for(var x = 0; x <= oldWidth; x++)
 			{
 				//Get the index of the pixel you want to copy.
 				var originalIndex = this.getPixel(x, y);
@@ -119,16 +130,21 @@ class PixelMap
 				var newIndex = newY * replacement.width * 4;
 				newIndex += newX * 4;
 				//copy the pixel data.
-				replacement.data[newIndex] = this.data[originalIndex];
-				replacement.data[newIndex + 1] = this.data[originalIndex + 1];
-				replacement.data[newIndex + 2] = this.data[originalIndex + 2];
-				replacement.data[newIndex + 3] = this.data[originalIndex + 3];
+				for(var i = 0; i < 4; i++)
+					replacement.data[newIndex + i] = this.data[originalIndex + i];
 			}
 		}
 		//Replace the image data, then reinitialize the busy-pixel array.
 		this.imagedata = replacement;
 		this.data = replacement.data;
-		this.busy = new Int8Array(this.data.length / 4);
+		this.initializeTrackingArrays();
 	}
-	getChangelist(){return this.changed; }
+	undo()
+	{
+		this.undoHistory.restoreState();
+	}
+	recordUndoState()
+	{
+		this.undoHistory.recordState();
+	}
 }

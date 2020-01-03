@@ -32,9 +32,11 @@ class Controller
 		this.start();
 		//Create a toolbox
 		this.toolbox = new ConfigToolbox(this.container, this);
+		this.changed = false;
 	}
 	click()
 	{
+		this.changed = true;
 		var theta = this.toolbox.getAngle();
 		var length = this.toolbox.getLength();
 		var hueRange = this.toolbox.getHueRange();
@@ -76,6 +78,11 @@ class Controller
 				this.sorters.splice(i, 1);
 				i--;
 			}
+		}
+		if(this.changed & this.sorters.length == 0)
+		{
+			this.imageInterface.saveUndoState();
+			this.changed = false;
 		}
 	}
 	//This clears all sorters and ensures all pixels they used are marked as non-busy.
@@ -143,6 +150,10 @@ class Controller
 	setSorterType(type)
 	{
 		this.sorterCreator.setType(type);
+	}
+	undo()
+	{
+		this.imageInterface.undo();
 	}
 }
 
