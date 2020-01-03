@@ -207,6 +207,26 @@ class IntensityDescendingSorter extends Sorter
 	}
 }
 
+class StarSorter extends Sorter
+{
+	constructor(pixelmap, x, y, theta, length, hueRange)
+	{
+		super(pixelmap, x, y, theta, length, hueRange);
+		this.sorters = new Array();
+		for(var i = 0; i < 360; i += 36)
+			this.sorters.push(new Sorter(pixelmap, x, y, theta + i, length, hueRange));
+	}
+	doSort()
+	{
+		var swapPerformed = false;
+		swapPerformed = super.doSort();
+		for(var sorter of this.sorters)
+			swapPerformed = sorter.doSort();
+		return swapPerformed;
+	}
+	
+}
+
 //This class encapsulates the creation of sorter objects.
 class SorterCreator
 {
@@ -237,6 +257,9 @@ class SorterCreator
 				break;
 			case "Intensity (Descending)":
 				this.sorterType = IntensityDescendingSorter;
+				break;
+			case "Star":
+				this.sorterType = StarSorter;
 				break;
 			default:
 				this.sorterType = Sorter;

@@ -394,7 +394,7 @@ class SorterSelector extends Dropdown
 		this.controller = controller;
 		//This approach isn't particularly scaleable.
 		//It might be an area to consider improving.
-		var sorterTypes = ["Luma", "Lightness", "Value", "Intensity", "Luma (Descending)", "Lightness (Descending)", "Value (Descending)", "Intensity (Descending)"];
+		var sorterTypes = ["Luma", "Lightness", "Value", "Intensity", "Luma (Descending)", "Lightness (Descending)", "Value (Descending)", "Intensity (Descending)", "Star"];
 		for(var type of sorterTypes)
 			this.addOption(type, type);
 	}
