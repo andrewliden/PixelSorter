@@ -224,7 +224,12 @@ class StarSorter extends Sorter
 			swapPerformed = sorter.doSort();
 		return swapPerformed;
 	}
-	
+	destroy()
+	{
+		for(var sorter of this.sorters)
+			sorter.destroy();
+		super.destroy();
+	}
 }
 
 //This class encapsulates the creation of sorter objects.
