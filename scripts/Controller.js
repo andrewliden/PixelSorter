@@ -153,6 +153,7 @@ class Controller
 	}
 	undo()
 	{
+		this.clearSortsAndBusymap();
 		this.imageInterface.undo();
 	}
 }

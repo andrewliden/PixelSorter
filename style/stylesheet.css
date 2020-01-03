@@ -74,6 +74,11 @@ button:active, [type="file"] + label:active
 	background-image: url("../media/stop_sorting.png");
 }
 
+#undo
+{
+	background-image: url("../media/undo.png");
+}
+
 input[type="range"]
 {
 	-webkit-appearance: none;
@@ -168,7 +173,7 @@ select
 #imagetools
 {
 	height: 50px;
-	grid-template-columns: auto auto auto;
+	grid-template-columns: auto auto auto auto;
 	grid-column-gap: 5px;
 }
 

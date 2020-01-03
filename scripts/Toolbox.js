@@ -48,6 +48,7 @@ class ImageToolbox extends Toolbox
 		this.controller = controller;
 		this.loadimage = new ImageUpload(this.inputsContainer, this.controller);
 		this.rotateimage = new ImageRotate(this.inputsContainer, this.controller);
+		this.undo = new Undo(this.inputsContainer, this.controller);
 		this.saveimage = new ImageSave(this.inputsContainer, this.controller);
 	}
 }

@@ -323,6 +323,19 @@ class ImageRotate extends Button
 	}
 }
 
+class Undo extends Button
+{
+	action()
+	{
+		this.controller.undo();
+	}
+	constructor(container, controller)
+	{
+		super(container, "Undo", "undo");
+		this.controller = controller;
+	}
+}
+
 class StopSorting extends Button
 {
 	action()
@@ -368,7 +381,6 @@ class Dropdown
 	}
 	getValue(){ return this.input.value; }
 }
-
 
 class SorterSelector extends Dropdown
 {

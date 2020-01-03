@@ -57,10 +57,6 @@ class HistoryNode extends AbstractHistoryNode
 	{
 		super(pixelmap);
 	}
-	restoreState(prev)
-	{
-		this.pixelmap.data.set(this.data);
-	}
 	recordState()
 	{
 		this.data.set(this.pixelmap.data);
