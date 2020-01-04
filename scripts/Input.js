@@ -13,10 +13,14 @@ class PointerListener
 		this.y = event.pageY - boundingRect.top;
 		this.dx = event.movementX;
 		this.dy = event.movementY;
+		this.clicking = true;
 		if(event.buttons == 1)
 		{
 			this.owner.click();
+			this.clicking = true;
 		}
+		else
+			this.clicking = false;
 	}
 	//Touchstart is the same as touchInput, but dx is set to 0.
 	//This is a bad design (don't repeat yourself).
@@ -33,6 +37,7 @@ class PointerListener
 			this.dy = 0;
 			this.x = offsetX;
 			this.y = offsetY;
+			this.clicking = true;
 			this.owner.click();
 		}
 	}
@@ -49,6 +54,7 @@ class PointerListener
 			this.dy = this.y - offsetY;
 			this.x = offsetX;
 			this.y = offsetY;
+			this.clicking = true;
 			this.owner.click();
 		}
 		
@@ -78,14 +84,22 @@ class PointerListener
 			selfReference.touchStart(event);
 			event.preventDefault();
 		}
+		this.endClick = function(event)
+		{
+			selfReference.clicking = false;
+		}
 		inputTarget.addEventListener("mousedown", this.mouseListenFunction);
 		inputTarget.addEventListener("mousemove", this.mouseListenFunction);
 		inputTarget.addEventListener("touchstart", this.touchStartListenFunction);
 		inputTarget.addEventListener("touchmove", this.touchListenFunction);
+		inputTarget.addEventListener("mouseup", this.endclick);
+		inputTarget.addEventListener("touchend", this.endclick);
+		inputTarget.addEventListener("touchcancel", this.endclick);
 		this.x = 0;
 		this.y = 0;
 		this.dx = 0;
 		this.dy = 0;
+		this.clicking = false;
 	}
 	
 }
@@ -96,6 +110,12 @@ class AngleInput
 	getRadians(){ return this.theta; }
 	setDegrees(degrees){ this.theta = degrees * Math.PI / 180; }
 	setRadians(radians){ this.theta = radians; }
+	addDegrees(degrees)
+	{
+		this.theta += degrees * Math.PI / 180;
+		this.updateInputBox();
+		this.draw();
+	}
 	updateInputBox()
 	{
 		this.inputBox.value = this.getDegrees();
@@ -397,5 +417,73 @@ class SorterSelector extends Dropdown
 		var sorterTypes = ["Luma", "Lightness", "Value", "Intensity", "Luma (Descending)", "Lightness (Descending)", "Value (Descending)", "Intensity (Descending)", "Star"];
 		for(var type of sorterTypes)
 			this.addOption(type, type);
+	}
+}
+
+//Abstract hotkey class.
+class Hotkey
+{
+	activate(event)
+	{
+		
+	}
+	constructor()
+	{
+		
+	}
+}
+
+//Abstract wheel hotkey class.
+class WheelHotkey extends Hotkey
+{
+	constructor()
+	{
+		super();
+		var selfReference = this;
+		document.addEventListener("wheel", function(event){ selfReference.activate(event); } );
+	}
+}
+
+class AddAngleHotkey extends WheelHotkey
+{
+	activate(event)
+	{
+		//Should add a degree every mousewheel movement.
+		this.angleInput.addDegrees(event.deltaY / 100);
+		//Simulate a click.
+		this.controller.click();
+	}
+	constructor(angleInput, controller)
+	{
+		super();
+		this.angleInput = angleInput;
+		this.controller = controller;
+	}
+}
+
+class KeyboardHotkey extends Hotkey
+{
+	constructor()
+	{
+		super();
+		var selfReference = this;
+		document.addEventListener("keydown", function(event){ selfReference.activate(event); } );
+	}
+}
+
+class StopSortingHotkey extends KeyboardHotkey
+{
+	activate(event)
+	{
+		//Simulate clicking the stop sorting button.
+		if(event.code == "Space")
+		{
+			this.controller.clearSortsAndBusymap();
+		}
+	}
+	constructor(controller)
+	{
+		super();
+		this.controller = controller;
 	}
 }

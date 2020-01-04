@@ -33,6 +33,9 @@ class ConfigToolbox extends Toolbox
 		this.inputsContainer.appendChild(this.sortercontrolsContainer);
 		this.sorterSelector = new SorterSelector(this.sortercontrolsContainer, this.controller);
 		this.stopSorters = new StopSorting(this.sortercontrolsContainer, this.controller);
+		//Add the hotkeys.
+		this.angleHotkey = new AddAngleHotkey(this.angleInput, this.controller);
+		this.stopHotkey = new StopSortingHotkey(this.controller);
 	}
 	getAngle(){ return this.angleInput.theta; }
 	getLength(){ return this.lengthInput.getValue(); }

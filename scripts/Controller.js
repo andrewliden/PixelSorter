@@ -36,29 +36,32 @@ class Controller
 	}
 	click()
 	{
-		this.changed = true;
-		var theta = this.toolbox.getAngle();
-		var length = this.toolbox.getLength();
-		var hueRange = this.toolbox.getHueRange();
-		var scale = 1 / this.imageInterface.getScale();
-		var scaledDx = this.pointerInput.dx * scale;
-		var scaledDy = this.pointerInput.dy * scale;
-		//If the pointer wasn't moving, just add 1 sorter.
-		if(scaledDx == 0 & scaledDy == 0)
+		if(this.pointerInput.clicking)
 		{
-			var x = scale * this.pointerInput.x
-			var y = scale * this.pointerInput.y
-			this.sorterCreator.create(x, y, theta, length, hueRange);
-		}
-		else
-		{
-			//If the pointer was moving, add sorters along the path the pointer
-			var distance = Math.sqrt(scaledDx ** 2 + scaledDy ** 2);
-			for(var t = 0; t < distance; t++)
+			this.changed = true;
+			var theta = this.toolbox.getAngle();
+			var length = this.toolbox.getLength();
+			var hueRange = this.toolbox.getHueRange();
+			var scale = 1 / this.imageInterface.getScale();
+			var scaledDx = this.pointerInput.dx * scale;
+			var scaledDy = this.pointerInput.dy * scale;
+			//If the pointer wasn't moving, just add 1 sorter.
+			if(scaledDx == 0 & scaledDy == 0)
 			{
-				var x = scale * this.pointerInput.x - scaledDx / distance * t;
-				var y = scale * this.pointerInput.y - scaledDy / distance * t;
+				var x = scale * this.pointerInput.x
+				var y = scale * this.pointerInput.y
 				this.sorterCreator.create(x, y, theta, length, hueRange);
+			}
+			else
+			{
+				//If the pointer was moving, add sorters along the path the pointer
+				var distance = Math.sqrt(scaledDx ** 2 + scaledDy ** 2);
+				for(var t = 0; t < distance; t++)
+				{
+					var x = scale * this.pointerInput.x - scaledDx / distance * t;
+					var y = scale * this.pointerInput.y - scaledDy / distance * t;
+					this.sorterCreator.create(x, y, theta, length, hueRange);
+				}
 			}
 		}
 	}
