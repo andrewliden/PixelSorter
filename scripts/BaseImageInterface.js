@@ -1,3 +1,8 @@
+///BaseImageInterface.js
+///By Andrew Liden
+///Defines the base class for an interface which simplifies client interaction with the source and preview images.
+
+
 //Abstract interface intended to simplify
 //client interaction with the source & preview
 // so that the two behave as one object.

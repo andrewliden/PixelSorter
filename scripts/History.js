@@ -1,3 +1,8 @@
+///History.js
+///By Andrew Liden
+///Keeps a short history of image map states using a stack.
+///Allows the user to revert to an older image map state.
+
 //Problem with this design:
 // The "rotate" method changes the index of every pixel.
 // The best fix I could think of is to rotate each history object,

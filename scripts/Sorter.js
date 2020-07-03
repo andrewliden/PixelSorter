@@ -1,3 +1,7 @@
+///Sorter.js
+///By Andrew Liden
+///Performs sorting operations on an image.
+
 class Sorter
 {
 	hueInRange(pixel)

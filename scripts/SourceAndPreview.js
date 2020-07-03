@@ -34,7 +34,8 @@ class Source
 	constructor(src)
 	{
 		this.setImage(src);
-		this.canvas = document.createElement("canvas");
+		this.jqCanvas = $("<canvas>");
+		this.canvas = this.jqCanvas[0];
 		this.context = this.canvas.getContext("2d");
 		//Create a blank pixelmap at first.
 		this.createPixelmap();
@@ -97,8 +98,9 @@ class Preview
 	{
 		this.source = source;
 		this.container = container;
-		this.canvas = document.createElement("canvas");
-		container.appendChild(this.canvas);
+		this.jqCanvas = $("<canvas>");
+		this.canvas = this.jqCanvas[0];
+		container.append(this.canvas);
 		this.context = this.canvas.getContext("2d");
 		this.scale = 1;
 	}

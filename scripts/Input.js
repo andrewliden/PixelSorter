@@ -1,3 +1,7 @@
+///Input.js
+///Andrew Liden
+///Simplifies client use of event listeners for touch and mouse input
+
 const ANGLEINPUT_LINE_COLOR = "white";
 const ANGLEINPUT_LINE_WIDTH = 3;
 
@@ -6,21 +10,33 @@ const ANGLEINPUT_LINE_WIDTH = 3;
 //keeps track of important stats such as x & y values and movement values.
 class PointerListener
 {
-	mouseInput(event)
+	mouseClickStart(event)
 	{
-		var boundingRect = this.inputCanvas.getBoundingClientRect();
-		this.x = event.pageX - boundingRect.left;
-		this.y = event.pageY - boundingRect.top;
-		this.dx = event.movementX;
-		this.dy = event.movementY;
-		this.clicking = true;
-		if(event.buttons == 1)
+		if(event.which == 1)
 		{
+			this.dx = 0;
+			this.dy = 0;
 			this.owner.click();
 			this.clicking = true;
 		}
-		else
+	}
+	mouseClickEnd(event)
+	{
+		if(event.which == 1)
 			this.clicking = false;
+	}
+	mouseInput(event)
+	{
+		var boundingRect = this.inputCanvas.getBoundingClientRect();
+		var offsetX = event.pageX - boundingRect.left;
+		var offsetY = event.pageY - boundingRect.top;
+		this.dx = this.x - offsetX;
+		this.dy = this.y - offsetY;
+		console.log(this.dx);
+		this.x = offsetX;
+		this.y = offsetY;
+		if(this.clicking)
+			this.owner.click();
 	}
 	//Touchstart is the same as touchInput, but dx is set to 0.
 	//This is a bad design (don't repeat yourself).
@@ -70,31 +86,35 @@ class PointerListener
 		//Create a variable that refers to this object
 		//to make sure the event listener functions use 
 		var selfReference = this;
-		this.mouseListenFunction = function(event)
-		{
+		
+		inputTarget.on("mousedown", function(event){
+			event.preventDefault();
+			selfReference.mouseClickStart(event);
+		});
+		inputTarget.on("mousemove", function(event){
+			event.preventDefault();
 			selfReference.mouseInput(event);
-		}
-		this.touchListenFunction = function(event)
-		{
-			selfReference.touchInput(event);
+		});
+		inputTarget.on("mouseup", function(event){
 			event.preventDefault();
-		}
-		this.touchStartListenFunction = function(event)
-		{
+			selfReference.mouseClickEnd(event);
+		});
+		inputTarget.on("touchstart", function(event){
+			event.preventDefault();
 			selfReference.touchStart(event);
+		});
+		inputTarget.on("touchmove", function(event){
 			event.preventDefault();
-		}
-		this.endClick = function(event)
-		{
+			selfReference.touchInput(event);
+		});
+		inputTarget.on("touchend", function(event){
+			event.preventDefault();
 			selfReference.clicking = false;
-		}
-		inputTarget.addEventListener("mousedown", this.mouseListenFunction);
-		inputTarget.addEventListener("mousemove", this.mouseListenFunction);
-		inputTarget.addEventListener("touchstart", this.touchStartListenFunction);
-		inputTarget.addEventListener("touchmove", this.touchListenFunction);
-		inputTarget.addEventListener("mouseup", this.endclick);
-		inputTarget.addEventListener("touchend", this.endclick);
-		inputTarget.addEventListener("touchcancel", this.endclick);
+		});
+		inputTarget.on("touchcancel", function(event){
+			event.preventDefault();
+			selfReference.clicking = false;
+		});
 		this.x = 0;
 		this.y = 0;
 		this.dx = 0;
@@ -118,7 +138,7 @@ class AngleInput
 	}
 	updateInputBox()
 	{
-		this.inputBox.value = this.getDegrees();
+		this.inputBox.attr("value", this.getDegrees());
 	}
 	draw()
 	{
@@ -151,34 +171,33 @@ class AngleInput
 			selfReference.setDegrees(selfReference.inputBox.value);
 			selfReference.draw();
 		}
-		this.inputBox.addEventListener("input", this.updateFromInputBox);
+		this.inputBox.on("input", this.updateFromInputBox);
 	}
 	constructor(container)
 	{
 		this.container = container;
 		//Create HTML elements.
-		this.label = document.createElement("label");
-		this.labeltextNode = document.createTextNode("Angle");
-		this.inputBox = document.createElement("input");
-		this.inputBox.setAttribute("type", "number");
-		this.inputCanvas = document.createElement("canvas");
-		this.subcontainer = document.createElement("div");
-		this.subcontainer.setAttribute("id", "angleinput");
+		this.label = $("<label></label>").text("Angle");
+		this.inputBox = $("<input></input>");
+		this.inputBox.attr("type", "number");
+		this.jqCanvas = $("<canvas>");
+		this.jqCanvas.attr("width", 100);
+		this.jqCanvas.attr("height", 100);
+		this.inputCanvas = this.jqCanvas[0];
+		this.subcontainer = $("<div></div>");
+		this.subcontainer.attr("id", "angleinput");
 		//Put the subcontainer inside the container.
-		this.container.appendChild(this.subcontainer);
+		this.container.append(this.subcontainer);
 		//Put the canvas & input box inside the subcontainer.
-		this.label.appendChild(this.labeltextNode);
-		this.subcontainer.appendChild(this.label);
-		this.subcontainer.appendChild(this.inputCanvas);
-		this.subcontainer.appendChild(this.inputBox);
+		this.subcontainer.append(this.label);
+		this.subcontainer.append(this.inputCanvas);
+		this.subcontainer.append(this.inputBox);
 		//Start setting up the canvas.
 		this.context = this.inputCanvas.getContext("2d");
-		this.inputCanvas.width = 100;
-		this.inputCanvas.height = 100;
 		this.context.strokeStyle = ANGLEINPUT_LINE_COLOR;
 		this.context.lineWidth = ANGLEINPUT_LINE_WIDTH;
 		this.theta = Math.PI / 2;
-		this.pointerListener = new PointerListener(this, this.inputCanvas, this.inputCanvas);
+		this.pointerListener = new PointerListener(this, this.jqCanvas, this.inputCanvas);
 		this.createInputBoxListener();
 		this.draw();
 		this.updateInputBox();
@@ -191,24 +210,23 @@ class SliderInput
 	createElements()
 	{
 		//Create the elements
-		this.subcontainer = document.createElement("div");
-		this.label = document.createElement("label");
-		this.labeltextNode = document.createTextNode(this.labeltext);
-		this.inputSlider = document.createElement("input");
-		this.inputBox = document.createElement("input");
+		this.subcontainer = $("<div></div>");
+		this.label = $("<label></label>").text(this.labeltext);
+		this.inputSlider = $("<input></input>");
+		this.inputBox = $("<input></input>");
 		//Define attributes.
-		this.inputSlider.setAttribute("type", "range");
-		this.inputSlider.setAttribute("min", "0");
-		this.inputSlider.setAttribute("max", this.max);
-		this.inputBox.setAttribute("type", "number");
+		this.inputSlider.attr("type", "range");
+		this.inputSlider.attr("min", "0");
+		this.inputSlider.attr("max", this.max);
+		this.inputBox.attr("type", "number");
 		//Append all of the elements into the container.
-		this.container.appendChild(this.subcontainer);
-		this.subcontainer.appendChild(this.label);
-		this.label.appendChild(this.labeltextNode);
-		this.subcontainer.appendChild(this.inputSlider);
-		this.subcontainer.appendChild(this.inputBox);
-		this.inputBox.value = this.value;
-		this.inputSlider.value = this.value;
+		this.container.append(this.subcontainer);
+		this.subcontainer.append(this.label);
+		this.label.append(this.labeltextNode);
+		this.subcontainer.append(this.inputSlider);
+		this.subcontainer.append(this.inputBox);
+		this.inputBox.attr("value", this.value);
+		this.inputSlider.attr("value", this.value);
 	}
 	createListeners()
 	{
@@ -216,21 +234,24 @@ class SliderInput
 		var selfReference = this;
 		this.updateValueFromSlider = function()
 		{
-			selfReference.value = selfReference.inputSlider.value;
-			selfReference.inputBox.value = selfReference.value;
+			//Get the value attribute from the slider, then give it to the input box.
+			selfReference.value = selfReference.inputSlider.val();
+			selfReference.inputBox.val(selfReference.value);
 		}
 		this.updateValueFromBox = function()
 		{
+			console.log(selfReference.inputBox.val());
 			//Clamp the value from the input box.
-			if(selfReference.inputBox.value < 0)
-				selfReference.inputBox.value = 0;
-			else if(selfReference.inputBox.value > selfReference.max)
-				selfReference.inputBox.value = selfReference.max;
-			selfReference.value = selfReference.inputBox.value;
-			selfReference.inputSlider.value = selfReference.value;
+			if(selfReference.inputBox.val() < 0)
+				selfReference.inputBox.val(0);
+			else if(selfReference.inputBox.attr("value") > selfReference.max)
+				selfReference.inputBox.val(selfReference.max);
+			//Get the value attribute from the box, then give it to the slider
+			selfReference.value = selfReference.inputBox.val();
+			selfReference.inputSlider.val(selfReference.value);
 		}
-		this.inputSlider.addEventListener("input", this.updateValueFromSlider);
-		this.inputBox.addEventListener("input", this.updateValueFromBox);
+		this.inputSlider.on("change", this.updateValueFromSlider);
+		this.inputBox.on("change", this.updateValueFromBox);
 	}
 	constructor(container, labeltext, initialValue, max)
 	{
@@ -244,7 +265,7 @@ class SliderInput
 	updateMax(newMax)
 	{
 		this.max = newMax;
-		this.inputSlider.setAttribute("max", this.max);
+		this.inputSlider.attr("max", this.max);
 		if(this.value > this.max)
 		{
 			this.value = this.max;
@@ -282,17 +303,15 @@ class ImageUpload
 	{
 		this.container = container;
 		this.controller = controller;
-		this.input = document.createElement("input");
-		this.input.setAttribute("type", "file");
-		this.input.setAttribute("id", "file");
-		this.label = document.createElement("label");
-		this.labeltext = document.createTextNode("Load Image");
-		this.label.setAttribute("for", "file");
-		this.label.appendChild(this.labeltext);
-		this.container.appendChild(this.input);
-		this.container.appendChild(this.label);
+		this.input = $("<input></input>");
+		this.input.attr("type", "file");
+		this.input.attr("id", "file");
+		this.label = $("<label></label>").text("Load Image");
+		this.label.attr("for", "file");
+		this.container.append(this.input);
+		this.container.append(this.label);
 		var selfReference = this;
-		this.input.addEventListener("input", function(){ selfReference.uploadFile(); });
+		this.input.on("input", function(){ selfReference.uploadFile(); });
 	}
 	
 }
@@ -306,14 +325,11 @@ class Button
 	constructor(container, text, id)
 	{
 		this.container = container;
-		this.controller = controller;
-		this.button = document.createElement("button");
-		this.button.setAttribute("id", id);
-		this.text = document.createTextNode(text);
-		this.button.appendChild(this.text);
-		this.container.appendChild(this.button);
+		this.button = $("<button></button>");
+		this.button.attr("id", id).text(text);
+		this.container.append(this.button);
 		var selfReference = this;
-		this.button.addEventListener("click", function(){ selfReference.action(); });
+		this.button.on("click", function(){ selfReference.action(); });
 	}
 }
 
@@ -378,26 +394,22 @@ class Dropdown
 	constructor(container, id, labeltext)
 	{
 		this.container = container;
-		this.controller = controller;
-		this.subcontainer = document.createElement("div");
-		this.container.appendChild(this.subcontainer);
-		this.label = document.createElement("label");
-		this.labeltextNode = document.createTextNode(labeltext);
-		this.label.appendChild(this.labeltextNode);
-		this.subcontainer.appendChild(this.label);
-		this.input = document.createElement("select");
-		this.input.setAttribute("id", id);
-		this.subcontainer.appendChild(this.input);
+		//this.controller = controller;
+		this.subcontainer = $("<div></div>");
+		this.container.append(this.subcontainer);
+		this.label = $("<label></label>").text(labeltext);
+		this.subcontainer.append(this.label);
+		this.input = $("<select></select>");
+		this.input.attr("id", id);
+		this.subcontainer.append(this.input);
 		var selfReference = this;
-		this.input.addEventListener("change", function(){ selfReference.action(); });
+		this.input.on("change", function(){ selfReference.action(); });
 	}
 	addOption(text, value)
 	{
-		var option = document.createElement("option");
-		var textNode = document.createTextNode(text);
-		option.setAttribute("value", value);
-		option.appendChild(textNode);
-		this.input.appendChild(option);
+		var option = $("<option></option>").text(text);
+		option.attr("value", value);
+		this.input.append(option);
 	}
 	getValue(){ return this.input.value; }
 }
@@ -427,9 +439,10 @@ class Hotkey
 	{
 		
 	}
-	constructor()
+	constructor(eventType)
 	{
-		
+		var selfReference = this;
+		$(document).on(eventType, function(event){ selfReference.activate(event); });
 	}
 }
 
@@ -438,9 +451,7 @@ class WheelHotkey extends Hotkey
 {
 	constructor()
 	{
-		super();
-		var selfReference = this;
-		document.addEventListener("wheel", function(event){ selfReference.activate(event); } );
+		super("wheel");
 	}
 }
 
@@ -465,9 +476,7 @@ class KeyboardHotkey extends Hotkey
 {
 	constructor()
 	{
-		super();
-		var selfReference = this;
-		document.addEventListener("keydown", function(event){ selfReference.activate(event); } );
+		super("keydown");
 	}
 }
 

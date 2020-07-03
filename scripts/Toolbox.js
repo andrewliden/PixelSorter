@@ -6,9 +6,9 @@ class Toolbox
 	{
 		this.container = container;
 		//Create a div to put the inputs in.
-		this.inputsContainer = document.createElement("div");
-		this.inputsContainer.setAttribute("id", subcontainerID);
-		this.container.appendChild(this.inputsContainer);
+		this.inputsContainer = $("<div></div>");
+		this.inputsContainer.attr("id", subcontainerID);
+		this.container.append(this.inputsContainer);
 	}
 }
 
@@ -21,17 +21,25 @@ class ConfigToolbox extends Toolbox
 		//make the angle input.
 		this.angleInput = new AngleInput(this.inputsContainer);
 		//Make a layer for the sliders.
-		this.slidersContainer = document.createElement("div");
-		this.slidersContainer.setAttribute("id", "sliderInputs");
-		this.inputsContainer.appendChild(this.slidersContainer);
+		this.slidersContainer = $("<div></div>");
+		this.slidersContainer.attr("id", "sliderInputs");
+		this.inputsContainer.append(this.slidersContainer);
 		//make the sliders.
 		this.lengthInput = new LengthSlider(this.slidersContainer, DEFAULT_MAXLENGTH);
 		this.hueInput = new HueSlider(this.slidersContainer);
-		//make a layer for the stop sorting button & the sorting type dropdown.
-		this.sortercontrolsContainer = document.createElement("div");
-		this.sortercontrolsContainer.setAttribute("id", "sortercontrols");
-		this.inputsContainer.appendChild(this.sortercontrolsContainer);
-		this.sorterSelector = new SorterSelector(this.sortercontrolsContainer, this.controller);
+		this.inputsContainer.append(this.sortercontrolsContainer);
+		//Make a layer for the sorter controls (stop sort + sorter settings)
+		this.sortercontrolsContainer = $("<div></div>");
+		this.sortercontrolsContainer.attr("id", "sortercontrols");
+		this.inputsContainer.append(this.sortercontrolsContainer);
+		//Make a layer for the sorter settings (what to sort on, what sorting algo)
+		this.sorterSettingsContainer = $("<div></div>");
+		this.sorterSettingsContainer.attr("id", "sorterSettings");
+		this.sortercontrolsContainer.append(this.sorterSettingsContainer);
+		
+		//Add the selector for what to sort on
+		this.sorterSelector = new SorterSelector(this.sorterSettingsContainer, this.controller);
+		//Add the stop sorting button
 		this.stopSorters = new StopSorting(this.sortercontrolsContainer, this.controller);
 		//Add the hotkeys.
 		this.angleHotkey = new AddAngleHotkey(this.angleInput, this.controller);

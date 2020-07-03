@@ -233,5 +233,11 @@ select
 
 #sortercontrols
 {
+	grid-template-columns: auto auto;
+	grid-column-gap: 5px;
+}
+
+#sorterSettings
+{
 	grid-template-rows: auto auto;
 }

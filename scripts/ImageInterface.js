@@ -1,3 +1,7 @@
+///ImageInterface.js
+///By Andrew Liden
+///Contains concretions of the base image interface
+
 //Just uses the base image interface.
 class ImageInterface extends BaseImageInterface
 {
@@ -6,9 +10,9 @@ class ImageInterface extends BaseImageInterface
 		super(container);
 		this.source = new Source(DEFAULT_IMG);
 		//Create a div to put the preview in.
-		this.previewContainer = document.createElement("div");
-		this.previewContainer.setAttribute("id", "preview");
-		this.container.appendChild(this.previewContainer);
+		this.previewContainer = $("<div></div");
+		this.previewContainer.attr("id", "preview");
+		this.container.append(this.previewContainer);
 		this.preview = new Preview(this.source, this.previewContainer);
 		this.cursor = new Cursor(this.preview.context);
 	}
@@ -22,9 +26,9 @@ class LiteImageInterface extends BaseImageInterface
 		super(container);
 		this.source = new SourceLite(DEFAULT_IMG);
 		//Create a div to put the preview in.
-		this.previewContainer = document.createElement("div");
-		this.previewContainer.setAttribute("id", "preview");
-		this.container.appendChild(this.previewContainer);
+		this.previewContainer = $("<div></div");
+		this.previewContainer.attr("id", "preview");
+		this.container.append(this.previewContainer);
 		this.preview = new Preview(this.source, this.previewContainer);
 		this.cursor = new Cursor(this.preview.context);
 	}

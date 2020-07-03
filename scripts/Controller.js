@@ -1,3 +1,7 @@
+///Controller.js
+///By Andrew Liden
+///Controls user interactions with the pixel-sorting program.
+
 
 //I'm sure someone will ask, "Why is the frame rate so low?"
 //It's because when it's a bit slower, it's easier sometimes to stop sorting.

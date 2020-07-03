@@ -1,3 +1,7 @@
+///Pixel.js
+///By Andrew Liden
+///Provides an interface which simplifies the use of javascript's imagedata.
+
 const SQRT_3 = Math.sqrt(3);
 
 ///This is a wrapper around the javascript "imagedata" object, which is a bit clunky to work with.

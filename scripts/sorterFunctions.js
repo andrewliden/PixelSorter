@@ -1,3 +1,8 @@
+///sorterFunctions.js
+///By Andrew Liden
+///Provides start-up functions for sorters.
+///Deprecated.
+
 var controller;
 
 function init()
@@ -12,6 +17,7 @@ function initLite()
 	controller = new LiteController(mainLayer);
 }
 
+//Deprecated, test function.
 function circleSort(r)
 {
 	var x = controller.pointerInput.x;
