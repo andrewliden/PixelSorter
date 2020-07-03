@@ -71,7 +71,7 @@ button:active, [type="file"] + label:active
 
 #stopsort
 {
-	background-image: url("../media/stop_sorting.png");
+	background-image: url("../media/stop_sorting_squareformat.png");
 }
 
 #undo
@@ -233,7 +233,7 @@ select
 
 #sortercontrols
 {
-	grid-template-columns: auto auto;
+	grid-template-columns: auto 120px;
 	grid-column-gap: 5px;
 }
 

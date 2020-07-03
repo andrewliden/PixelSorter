@@ -32,7 +32,6 @@ class PointerListener
 		var offsetY = event.pageY - boundingRect.top;
 		this.dx = this.x - offsetX;
 		this.dy = this.y - offsetY;
-		console.log(this.dx);
 		this.x = offsetX;
 		this.y = offsetY;
 		if(this.clicking)
@@ -296,7 +295,7 @@ class ImageUpload
 {
 	uploadFile()
 	{
-		var file = this.input.files[0];
+		var file = this.input[0].files[0];
 		this.controller.loadImage(file);
 	}
 	constructor(container, controller)
@@ -460,7 +459,7 @@ class AddAngleHotkey extends WheelHotkey
 	activate(event)
 	{
 		//Should add a degree every mousewheel movement.
-		this.angleInput.addDegrees(event.deltaY / 100);
+		this.angleInput.addDegrees(event.originalEvent.deltaY / 100);
 		//Simulate a click.
 		this.controller.click();
 	}
