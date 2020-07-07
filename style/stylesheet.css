@@ -36,6 +36,25 @@ input[type="number"], button, [type="file"] + label, select
 	border: 0px;
 }
 
+#ascendingToggle
+{
+	color: white;
+	margin-top: 5px;
+	width: 100%;
+	font-size: 20pt;
+}
+
+#ascendingToggle.toggleOff
+{
+	background-color: rgb(149, 149, 0);
+}
+
+#sortercontrols label
+{
+	font-size: 14pt;
+}
+
+
 button, [type="file"] + label
 {
 	display: block;

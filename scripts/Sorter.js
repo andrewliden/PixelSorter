@@ -1,7 +1,3 @@
-///Sorter.js
-///By Andrew Liden
-///Performs sorting operations on an image.
-
 class Sorter
 {
 	hueInRange(pixel)
@@ -98,13 +94,19 @@ class Sorter
 		this.startHue;
 		this.createPixelList()
 	}
+	setStrategy(sortingStrategy)
+	{
+		this.strategy = sortingStrategy;
+	}
 	//Compares two pixel objects.
-	pixelCompare(pixel1, pixel2)
+	/*pixelCompare(pixel1, pixel2)
 	{
 		return this.pixelmap.getLuma(pixel1) < this.pixelmap.getLuma(pixel2);
-	}
+	}*/
 	doSort()
 	{
+		return this.strategy.sort(this.pixelList);
+		/*
 		var swapPerformed = false;
 		for(var t = 1; t < this.pixelList.length; t++)
 		{
@@ -116,7 +118,7 @@ class Sorter
 				swapPerformed = true;
 			}
 		}
-		return swapPerformed;
+		return swapPerformed;*/
 	}
 	destroy()
 	{
@@ -127,7 +129,7 @@ class Sorter
 	}
 }
 
-class LightnessSorter extends Sorter
+/*class LightnessSorter extends Sorter
 {
 	constructor(pixelmap, x, y, theta, length, hueRange)
 	{
@@ -234,55 +236,47 @@ class StarSorter extends Sorter
 			sorter.destroy();
 		super.destroy();
 	}
-}
+}*/
 
 //This class encapsulates the creation of sorter objects.
 class SorterCreator
 {
-	setType(type)
+	setStrategy(strategy)
 	{
-		switch(type)
+		switch(strategy)
 		{
-			case "Luma":
-				this.sorterType = Sorter;
+			case "Bubble":
+				this.strategyType = BubbleSort;
 				break;
-			case "Lightness":
-				this.sorterType = LightnessSorter;
+			case "Insertion":
+				this.strategyType = InsertionSort;
 				break;
-			case "Value":
-				this.sorterType = ValueSorter;
+			case "Selection":
+				this.strategyType = SelectionSort;
 				break;
-			case "Intensity":
-				this.sorterType = IntensitySorter;
-				break;
-			case "Luma (Descending)":
-				this.sorterType = LumaDescendingSorter;
-				break;
-			case "Lightness (Descending)":
-				this.sorterType = LightnessDescendingSorter;
-				break;
-			case "Value (Descending)":
-				this.sorterType = ValueDescendingSorter;
-				break;
-			case "Intensity (Descending)":
-				this.sorterType = IntensityDescendingSorter;
-				break;
-			case "Star":
-				this.sorterType = StarSorter;
-				break;
-			default:
-				this.sorterType = Sorter;
 		}
+	}
+	setAscending(ascending)
+	{
+		this.ascending = ascending;
+	}
+	setCriteria(criteria)
+	{
+		this.sortOn = criteria;
 	}
 	create(startX, startY, theta, maxPixels, hueRange)
 	{
 		var pixelmap = this.controller.getPixelmap();
-		var newSorter = new this.sorterType(pixelmap, startX, startY, theta, maxPixels, hueRange);
+		var newSorter = new Sorter(pixelmap, startX, startY, theta, maxPixels, hueRange);
+		var strategy = new this.strategyType(pixelmap, this.ascending, this.sortOn);
+		newSorter.setStrategy(strategy);
 		this.controller.sorters.push(newSorter);
 	}
 	constructor(controller)
 	{
 		this.controller = controller;
-		this.sorterType = Sorter;
+		this.strategyType = BubbleSort;
+		this.sortOn = "Luma";
+		this.ascending = true;
 	}
 }

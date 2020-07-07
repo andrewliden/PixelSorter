@@ -154,9 +154,17 @@ class Controller
 		if(file)
 			reader.readAsDataURL(file);
 	}
-	setSorterType(type)
+	setSorterCriteria(criteria)
 	{
-		this.sorterCreator.setType(type);
+		this.sorterCreator.setCriteria(criteria);
+	}
+	setSortingAlgorithm(algorithm)
+	{
+		this.sorterCreator.setStrategy(algorithm);
+	}
+	setAscendingState(state)
+	{
+		this.sorterCreator.setAscending(state);
 	}
 	undo()
 	{

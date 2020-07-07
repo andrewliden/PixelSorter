@@ -28,8 +28,8 @@ class PointerListener
 	mouseInput(event)
 	{
 		var boundingRect = this.inputCanvas.getBoundingClientRect();
-		var offsetX = event.pageX - boundingRect.left;
-		var offsetY = event.pageY - boundingRect.top;
+		var offsetX = event.clientX - boundingRect.left;
+		var offsetY = event.clientY - boundingRect.top;
 		this.dx = this.x - offsetX;
 		this.dy = this.y - offsetY;
 		this.x = offsetX;
@@ -46,8 +46,8 @@ class PointerListener
 		{
 			var touch = event.targetTouches[0];
 			var boundingRect = this.inputCanvas.getBoundingClientRect();
-			var offsetX = touch.pageX - boundingRect.left;
-			var offsetY = touch.pageY - boundingRect.top;
+			var offsetX = touch.clientX - boundingRect.left;
+			var offsetY = touch.clientY - boundingRect.top;
 			this.dx = 0;
 			this.dy = 0;
 			this.x = offsetX;
@@ -410,24 +410,93 @@ class Dropdown
 		option.attr("value", value);
 		this.input.append(option);
 	}
-	getValue(){ return this.input.value; }
+	getValue(){ return this.input.val(); }
 }
 
-class SorterSelector extends Dropdown
+class SorterCriteriaSelector extends Dropdown
 {
 	action()
 	{
-		this.controller.setSorterType(this.getValue());
+		this.controller.setSorterCriteria(this.getValue());
 	}
 	constructor(container, controller)
 	{
-		super(container, "sorterselector", "Sorter Type");
+		super(container, "sorterselector", "Sort on...");
 		this.controller = controller;
 		//This approach isn't particularly scaleable.
 		//It might be an area to consider improving.
-		var sorterTypes = ["Luma", "Lightness", "Value", "Intensity", "Luma (Descending)", "Lightness (Descending)", "Value (Descending)", "Intensity (Descending)", "Star"];
+		var sorterTypes = ["Luma", "Lightness", "Value", "Intensity"];
 		for(var type of sorterTypes)
 			this.addOption(type, type);
+	}
+}
+
+class AlgorithmSelector extends Dropdown
+{
+	action()
+	{
+		this.controller.setSortingAlgorithm(this.getValue());
+	}
+	constructor(container, controller)
+	{
+		super(container, "algorithmselector", "Using this algorithm...");
+		this.controller = controller;
+		var algorithms = ["Bubble", "Insertion", "Selection"];
+		for(var algo of algorithms)
+			this.addOption(algo, algo);
+	}
+}
+
+class ToggleButton
+{
+	toggle()
+	{
+		this.state = !this.state;
+		if(this.state)
+		{
+			this.button.text(this.onText);
+			this.button.attr("class", "toggleOn");
+		}
+		else
+		{
+			this.button.text(this.offText);
+			this.button.attr("class", "toggleOff");
+		}
+	}
+	action()
+	{
+		
+	}
+	constructor(container, offText, onText)
+	{
+		//Get attributes from arguments
+		this.container = container;
+		this.offText = offText;
+		this.onText = onText;
+		this.state = true;
+		this.button = $("<button></button>");
+		this.button.text(onText);
+		//Add the checkbox and label to the DOM.
+		this.container.append(this.button).append(this.label);
+		var selfReference = this;
+		this.button.on("click", function(){
+			selfReference.toggle();
+			selfReference.action();
+		});
+	}
+}
+
+class AscendingToggle extends ToggleButton
+{
+	action()
+	{
+		this.controller.setAscendingState(this.state);
+	}
+	constructor(container, controller)
+	{
+		super(container, "Descending", "Ascending");
+		this.button.attr("id", "ascendingToggle");
+		this.controller = controller;
 	}
 }
 

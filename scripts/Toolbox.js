@@ -37,8 +37,10 @@ class ConfigToolbox extends Toolbox
 		this.sorterSettingsContainer.attr("id", "sorterSettings");
 		this.sortercontrolsContainer.append(this.sorterSettingsContainer);
 		
-		//Add the selector for what to sort on
-		this.sorterSelector = new SorterSelector(this.sorterSettingsContainer, this.controller);
+		//Add the selector for what to sort on and how to sort it.
+		this.sorterCriteriaSelector = new SorterCriteriaSelector(this.sorterSettingsContainer, this.controller);
+		this.sorterAlgoSelector = new AlgorithmSelector(this.sorterSettingsContainer, this.controller);
+		this.ascendingSelector = new AscendingToggle(this.sorterSettingsContainer, this.controller);
 		//Add the stop sorting button
 		this.stopSorters = new StopSorting(this.sortercontrolsContainer, this.controller);
 		//Add the hotkeys.
