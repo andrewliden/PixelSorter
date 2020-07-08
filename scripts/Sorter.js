@@ -254,6 +254,9 @@ class SorterCreator
 			case "Selection":
 				this.strategyType = SelectionSort;
 				break;
+			case "Quick":
+				this.strategyType = QuickSort;
+				break;
 		}
 	}
 	setAscending(ascending)

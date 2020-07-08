@@ -134,3 +134,90 @@ class SelectionSort extends ComparisonSort
 		}
 	}
 }
+
+class QuickSortWorker extends ComparisonSort
+{
+	constructor(pixelmap, ascending, getValueMethod, start, end)
+	{
+		super(pixelmap, ascending, getValueMethod);
+		this.start = start;
+		this.end = end;
+	}
+	partition(pixelList)
+	{
+		//Index of the rightmost element that is known
+		//to belong on the left side. Starts at -1 (no such value exists yet)
+		var i = this.start - 1;
+		var pivot = pixelList[this.end];
+		for(var j = this.start; j < this.end - 1; j++)
+		{
+			var possibleSwap = pixelList[j];
+			if(this.pixelCompare(possibleSwap, pivot))
+			{
+				i++;
+				this.pixelmap.swap(possibleSwap, pixelList[i]);
+			}
+		}
+		this.pixelmap.swap(pixelList[i + 1], pivot);
+		return (i + 1);
+	}
+	sort(pixelList)
+	{
+		var workers = [];
+		if(this.start <= this.end)
+		{
+			var pivotIndex = this.partition(pixelList);
+			workers.push(new QuickSortWorker(this.pixelmap, this.ascending, this.getValueMethod, this.start, pivotIndex - 1));
+			workers.push(new QuickSortWorker(this.pixelmap, this.ascending, this.getValueMethod, pivotIndex + 1, this.end));
+		}
+		return workers;
+	}
+}
+
+class QuickSort extends SortingStrategy
+{
+	constructor(pixelmap, ascending, getValueMethod)
+	{
+		super(pixelmap, ascending, getValueMethod);
+		this.workers = [];
+		this.firstRun = true;
+	}
+	sort(pixelList)
+	{
+		//On first run, add a quicksort worker for the whole list.
+		if(this.firstRun)
+		{
+			this.workers.push(new QuickSortWorker(this.pixelmap, this.ascending, this.getValueMethod, 0, pixelList.length - 1));
+			this.firstRun = false;
+		}
+		
+		//If there are no workers, the sorting operation is complete.
+		if(this.workers.length == 0)
+			return false;
+		else
+		{
+			//Make a temporary workers list of workers to add later.
+			var workersToAdd = [];
+			while(this.workers.length > 0)
+			{
+				//Get a worker from the list and sort it.
+				//You'll get a list of new sorters from the quicksort worker.
+				var worker = this.workers.pop();
+				var workersFromQuicksort = worker.sort(pixelList);
+				//Add the workers you got to the temporary list of workers to add.
+				while(workersFromQuicksort.length > 0)
+					workersToAdd.push(workersFromQuicksort.pop());
+			}
+			//Now that sorting is done for this frame, add the contents of the temporary workers list to the actual workers list.
+			while(workersToAdd.length > 0)
+				this.workers.push(workersToAdd.pop());
+
+			return true;
+		}
+	}
+}
+
+class BucketSort extends SortingStrategy
+{
+	
+}

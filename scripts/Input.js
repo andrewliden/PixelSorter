@@ -441,7 +441,7 @@ class AlgorithmSelector extends Dropdown
 	{
 		super(container, "algorithmselector", "Using this algorithm...");
 		this.controller = controller;
-		var algorithms = ["Bubble", "Insertion", "Selection"];
+		var algorithms = ["Bubble", "Insertion", "Selection", "Quick"];
 		for(var algo of algorithms)
 			this.addOption(algo, algo);
 	}
