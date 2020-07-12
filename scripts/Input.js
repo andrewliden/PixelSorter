@@ -20,8 +20,7 @@ class PointerListener
 	}
 	mouseClickEnd(event)
 	{
-		if(event.which == 1)
-			this.clicking = false;
+		this.clicking = false;
 	}
 	mouseInput(event)
 	{
