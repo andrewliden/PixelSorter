@@ -149,7 +149,7 @@ class AngleInput
 	}
 	updateInputBox()
 	{
-		this.inputBox.attr("value", this.getDegrees());
+		this.inputBox.val(this.getDegrees());
 	}
 	draw()
 	{
@@ -179,7 +179,8 @@ class AngleInput
 		var selfReference = this;
 		this.updateFromInputBox = function(event)
 		{
-			selfReference.setDegrees(selfReference.inputBox.value);
+			var degrees = parseFloat(selfReference.inputBox.val());
+			selfReference.setDegrees(degrees);
 			selfReference.draw();
 		}
 		this.inputBox.on("input", this.updateFromInputBox);
@@ -246,19 +247,25 @@ class SliderInput
 		this.updateValueFromSlider = function()
 		{
 			//Get the value attribute from the slider, then give it to the input box.
-			selfReference.value = selfReference.inputSlider.val();
+			selfReference.value = parseFloat(selfReference.inputSlider.val());
 			selfReference.inputBox.val(selfReference.value);
 		}
 		this.updateValueFromBox = function()
 		{
-			console.log(selfReference.inputBox.val());
+			//Get the value attribute from the box
+			selfReference.value = parseFloat(selfReference.inputBox.val());
 			//Clamp the value from the input box.
-			if(selfReference.inputBox.val() < 0)
-				selfReference.inputBox.val(0);
-			else if(selfReference.inputBox.attr("value") > selfReference.max)
+			if(selfReference.value < 0)
+			{
+				selfReference.value = 0;
+				selfReference.inputbox.val(0);
+			}
+			else if(selfReference.value > selfReference.max)
+			{
+				selfReference.value = selfReference.max;
 				selfReference.inputBox.val(selfReference.max);
-			//Get the value attribute from the box, then give it to the slider
-			selfReference.value = selfReference.inputBox.val();
+			}
+			//give it to the slider
 			selfReference.inputSlider.val(selfReference.value);
 		}
 		this.inputSlider.on("change", this.updateValueFromSlider);
