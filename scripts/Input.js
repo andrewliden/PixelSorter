@@ -536,8 +536,6 @@ class AddAngleHotkey extends WheelHotkey
 	{
 		//Should add a degree every mousewheel movement.
 		this.angleInput.addDegrees(event.originalEvent.deltaY / 100);
-		//Simulate a click.
-		this.controller.click();
 	}
 	constructor(angleInput, controller)
 	{
