@@ -10,22 +10,16 @@ const ANGLEINPUT_LINE_WIDTH = 3;
 //keeps track of important stats such as x & y values and movement values.
 class PointerListener
 {
-	mouseClickStart(event)
+	isInTarget(event)
 	{
-		if(event.which == 1)
-		{
-			this.owner.click();
-			this.clicking = true;
-		}
+		return event.target == this.inputTarget[0] || $.contains(this.inputTarget[0], event.target);
 	}
-	mouseClickEnd(event)
-	{
-		this.clicking = false;
-	}
+
 	mouseInput(event)
 	{
-		if(event.target == inputTarget)
+		if(this.isInTarget(event))
 		{
+
 			var boundingRect = this.inputCanvas.getBoundingClientRect();
 			var offsetX = event.clientX - boundingRect.left;
 			var offsetY = event.clientY - boundingRect.top;
@@ -43,8 +37,11 @@ class PointerListener
 			}
 			this.x = offsetX;
 			this.y = offsetY;
-			if(this.clicking)
+			if(event.which == 1)
+			{
+				this.clicking = true;
 				this.owner.click();
+			}
 		}
 		else
 		{
@@ -55,37 +52,44 @@ class PointerListener
 	//This is a bad design (don't repeat yourself).
 	touchStart(event)
 	{
-		//Only perform clicks on single-touch.
-		if(event.targetTouches.length == 1)
+		if(this.isInTarget(event))
 		{
-			var touch = event.targetTouches[0];
-			var boundingRect = this.inputCanvas.getBoundingClientRect();
-			var offsetX = touch.clientX - boundingRect.left;
-			var offsetY = touch.clientY - boundingRect.top;
-			this.dx = 0;
-			this.dy = 0;
-			this.x = offsetX;
-			this.y = offsetY;
-			this.clicking = true;
-			this.owner.click();
+			//Only perform clicks on single-touch.
+			if(event.targetTouches.length == 1)
+			{
+				var touch = event.targetTouches[0];
+				var boundingRect = this.inputCanvas.getBoundingClientRect();
+				var offsetX = touch.clientX - boundingRect.left;
+				var offsetY = touch.clientY - boundingRect.top;
+				this.dx = 0;
+				this.dy = 0;
+				this.x = offsetX;
+				this.y = offsetY;
+				this.clicking = true;
+				this.owner.click();
+			}
 		}
 	}
 	touchInput(event)
 	{
-		//Only perform clicks on single-touch.
-		if(event.targetTouches.length == 1)
+		if(this.isInTarget(event))
 		{
-			var touch = event.targetTouches[0];
-			var boundingRect = event.target.getBoundingClientRect();
-			var offsetX = touch.pageX - boundingRect.left;
-			var offsetY = touch.pageY - boundingRect.top;
-			this.dx = this.x - offsetX;
-			this.dy = this.y - offsetY;
-			this.x = offsetX;
-			this.y = offsetY;
-			this.clicking = true;
-			this.owner.click();
+			//Only perform clicks on single-touch.
+			if(event.targetTouches.length == 1)
+			{
+				var touch = event.targetTouches[0];
+				var boundingRect = event.target.getBoundingClientRect();
+				var offsetX = touch.pageX - boundingRect.left;
+				var offsetY = touch.pageY - boundingRect.top;
+				this.dx = this.x - offsetX;
+				this.dy = this.y - offsetY;
+				this.x = offsetX;
+				this.y = offsetY;
+				this.clicking = true;
+				this.owner.click();
+			}
 		}
+
 		
 	}
 	constructor(owner, inputTarget, inputCanvas)
@@ -100,32 +104,21 @@ class PointerListener
 		//to make sure the event listener functions use 
 		var selfReference = this;
 		
-		inputTarget.on("mousedown", function(event){
-			event.preventDefault();
-			selfReference.mouseClickStart(event);
-		});
-		inputTarget.on("mousemove", function(event){
-			event.preventDefault();
+		$(document).on("mousemove", function(event){
+			if(selfReference.isInTarget(event))
+				event.preventDefault();
 			selfReference.mouseInput(event);
 		});
-		inputTarget.on("mouseup", function(event){
-			event.preventDefault();
-			selfReference.mouseClickEnd(event);
-		});
-		inputTarget.on("touchstart", function(event){
-			event.preventDefault();
+		$(document).on("touchstart", function(event){
 			selfReference.touchStart(event);
 		});
-		inputTarget.on("touchmove", function(event){
-			event.preventDefault();
+		$(document).on("touchmove", function(event){
 			selfReference.touchInput(event);
 		});
-		inputTarget.on("touchend", function(event){
-			event.preventDefault();
+		$(document).on("touchend", function(event){
 			selfReference.clicking = false;
 		});
-		inputTarget.on("touchcancel", function(event){
-			event.preventDefault();
+		$(document).on("touchcancel", function(event){
 			selfReference.clicking = false;
 		});
 		this.x = 0;
