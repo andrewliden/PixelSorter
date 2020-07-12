@@ -103,7 +103,12 @@ class PointerListener
 		//Create a variable that refers to this object
 		//to make sure the event listener functions use 
 		var selfReference = this;
-		
+
+		$(document).on("mousedown", function(event){
+			if(selfReference.isInTarget(event))
+				event.preventDefault();
+			selfReference.mouseInput(event);
+		});		
 		$(document).on("mousemove", function(event){
 			if(selfReference.isInTarget(event))
 				event.preventDefault();
