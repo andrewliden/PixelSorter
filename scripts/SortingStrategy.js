@@ -1,3 +1,79 @@
+
+//Abstract value retrieval strategy class.
+class SortOnStrategy
+{
+	constructor(parentStrategy)
+	{
+		this.parentStrategy = parentStrategy;
+	}
+	getValue(pixel){}
+}
+
+class getLumaStrategy extends SortOnStrategy
+{
+	constructor(parentStrategy)
+	{
+		super(parentStrategy);
+	}
+	getValue(pixel)
+	{
+		return this.parentStrategy.pixelmap.getLuma(pixel);
+	}
+}
+
+class getIntensityStrategy extends SortOnStrategy
+{
+	constructor(parentStrategy)
+	{
+		super(parentStrategy);
+	}
+	getValue(pixel)
+	{
+		return this.parentStrategy.pixelmap.getIntensity(pixel);
+	}
+}
+
+class getValueStrategy extends SortOnStrategy
+{
+	constructor(parentStrategy)
+	{
+		super(parentStrategy);
+	}
+	getValue(pixel)
+	{
+		return this.parentStrategy.pixelmap.getValue(pixel);
+	}
+}
+
+class getLightnessStrategy extends SortOnStrategy
+{
+	constructor(parentStrategy)
+	{
+		super(parentStrategy);
+	}
+	getValue(pixel)
+	{
+		return this.parentStrategy.pixelmap.getLightness(pixel);
+	}
+}
+
+function createSortOnStrategy(sortingStrategy, methodName)
+{
+	switch(methodName)
+	{
+		case "Luma":
+			return new getLumaStrategy(sortingStrategy);
+		case "Intensity":
+			return new getIntensityStrategy(sortingStrategy);
+		case "Value":
+			return new getValueStrategy(sortingStrategy);
+		case "Lightness":
+			return new getLightnessStrategy(sortingStrategy);
+		default:
+			return new getLumaStrategy(sortingStrategy);
+	}
+}
+
 //Abstract sorting strategy class.
 //Gets a reference to the pixel map,
 //Whether to sort in ascending or descending order,
@@ -9,22 +85,11 @@ class SortingStrategy
 		this.pixelmap = pixelmap;
 		this.ascending = ascending;
 		this.getValueMethod = getValueMethod;
+		this.sortOnStrategy = createSortOnStrategy(this, this.getValueMethod);
 	}
 	getValueToSortOn(pixel)
 	{
-		switch(this.getValueMethod)
-		{
-			case "Luma":
-				return this.pixelmap.getLuma(pixel);
-			case "Intensity":
-				return this.pixelmap.getIntensity(pixel);
-			case "Value":
-				return this.pixelmap.getValue(pixel);
-			case "Lightness":
-				return this.pixelmap.getLightness(pixel);
-			default:
-				return this.pixelmap.getLuma(pixel);
-		}
+		return this.sortOnStrategy.getValue(pixel);
 	}
 	sort(pixelList)
 	{
