@@ -24,25 +24,32 @@ class PointerListener
 	}
 	mouseInput(event)
 	{
-		var boundingRect = this.inputCanvas.getBoundingClientRect();
-		var offsetX = event.clientX - boundingRect.left;
-		var offsetY = event.clientY - boundingRect.top;
-		//If the original event has a movement amount, use that for dx and dy.
-		//Assume that if movementX exists, so does movementY.
-		if(event.originalEvent.movementX)
+		if(event.target == inputTarget)
 		{
-			this.dx = event.originalEvent.movementX;
-			this.dy = event.originalEvent.movementY;
+			var boundingRect = this.inputCanvas.getBoundingClientRect();
+			var offsetX = event.clientX - boundingRect.left;
+			var offsetY = event.clientY - boundingRect.top;
+			//If the original event has a movement amount, use that for dx and dy.
+			//Assume that if movementX exists, so does movementY.
+			if(event.originalEvent.movementX)
+			{
+				this.dx = event.originalEvent.movementX;
+				this.dy = event.originalEvent.movementY;
+			}
+			else
+			{
+				this.dx = this.x - offsetX;
+				this.dy = this.y - offsetY;
+			}
+			this.x = offsetX;
+			this.y = offsetY;
+			if(this.clicking)
+				this.owner.click();
 		}
 		else
 		{
-			this.dx = this.x - offsetX;
-			this.dy = this.y - offsetY;
+			this.clicking = false;
 		}
-		this.x = offsetX;
-		this.y = offsetY;
-		if(this.clicking)
-			this.owner.click();
 	}
 	//Touchstart is the same as touchInput, but dx is set to 0.
 	//This is a bad design (don't repeat yourself).
