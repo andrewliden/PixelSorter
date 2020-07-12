@@ -14,8 +14,6 @@ class PointerListener
 	{
 		if(event.which == 1)
 		{
-			this.dx = 0;
-			this.dy = 0;
 			this.owner.click();
 			this.clicking = true;
 		}
@@ -30,8 +28,18 @@ class PointerListener
 		var boundingRect = this.inputCanvas.getBoundingClientRect();
 		var offsetX = event.clientX - boundingRect.left;
 		var offsetY = event.clientY - boundingRect.top;
-		this.dx = this.x - offsetX;
-		this.dy = this.y - offsetY;
+		//If the original event has a movement amount, use that for dx and dy.
+		//Assume that if movementX exists, so does movementY.
+		if(event.originalEvent.movementX)
+		{
+			this.dx = event.originalEvent.movementX;
+			this.dy = event.originalEvent.movementY;
+		}
+		else
+		{
+			this.dx = this.x - offsetX;
+			this.dy = this.y - offsetY;
+		}
 		this.x = offsetX;
 		this.y = offsetY;
 		if(this.clicking)
