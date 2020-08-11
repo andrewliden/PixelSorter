@@ -1,5 +1,3 @@
-#Interactive Pixel Sorter
-
 This is a web toy that allows you to interactively create glitch art by sorting pixels. It also creates a visual demonstration of sorting algorithms in action.
 
 ## [Try it here](https://andrewliden.github.io/PixelSorter/pixelSort.html)
